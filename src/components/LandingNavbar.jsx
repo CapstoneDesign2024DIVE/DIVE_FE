@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function LandingNavbar() {
   return (
     <>
-      <nav className="flex justify-between items-center px-32 py-3">
+      <nav className="fixed top-0 left-0 right-0 flex justify-between items-center px-32 py-3 z-50">
         <Link to="/" className="font-bold text-2xl flex items-center">
           DIVE
         </Link>
@@ -16,7 +16,7 @@ export default function LandingNavbar() {
           </Link>
           <Link
             to="/signup"
-            className="font-medium text-gray-800  hover:text-gray-500"
+            className="font-medium text-gray-800 hover:text-gray-500"
           >
             회원가입
           </Link>

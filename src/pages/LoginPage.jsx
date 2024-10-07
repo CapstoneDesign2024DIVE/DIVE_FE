@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { login, useUserInfo } from "../apis/userAPI";
 import LandingNavbar from "../components/LandingNavbar";
 import naverLogo from "../assets/icons/naver.svg";
 import kakaoLogo from "../assets/icons/kakao.svg";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+  const loginMutation = login();
+  const { refetch: refetchUserInfo } = useUserInfo();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
-
-  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,14 +22,21 @@ export default function LoginPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      await loginMutation.mutateAsync(formData);
+      await refetchUserInfo();
+      navigate("/home");
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   return (
     <>
       <LandingNavbar />
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center py-16">
         <div className="w-full max-w-md">
           <form className="px-8 py-6" onSubmit={handleSubmit}>
             <h2 className="text-2xl font-bold text-center mb-4">로그인</h2>
@@ -42,7 +51,7 @@ export default function LoginPage() {
                 </label>
               </div>
               <input
-                className="text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+                className="font-medium text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
                 id="username"
                 name="username"
                 type="text"
@@ -62,7 +71,7 @@ export default function LoginPage() {
                 </label>
               </div>
               <input
-                className="text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+                className="font-medium text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
                 id="password"
                 name="password"
                 type="password"
@@ -76,10 +85,17 @@ export default function LoginPage() {
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none w-full"
                 type="submit"
+                disabled={loginMutation.isLoading}
               >
-                로그인
+                {loginMutation.isLoading ? "로그인 중..." : "로그인"}
               </button>
             </div>
+
+            {loginMutation.isError && (
+              <p className="text-red-500 text-center mt-2">
+                {loginMutation.error.message || "로그인에 실패했습니다."}
+              </p>
+            )}
 
             <div className="flex justify-between font-medium text-sm mb-2">
               <Link to="/find-account" className="text-gray-700">

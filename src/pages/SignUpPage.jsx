@@ -1,7 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { signUp, login, useUserInfo } from "../apis/userAPI";
 import LandingNavbar from "../components/LandingNavbar";
 
 export default function SignUpPage() {
+  const navigate = useNavigate();
+  const signUpMutation = signUp();
+  const loginMutation = login();
+  const { refetch: refetchUserInfo } = useUserInfo();
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -57,16 +64,33 @@ export default function SignUpPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
+      try {
+        await signUpMutation.mutateAsync(formData);
+
+        const loginData = {
+          username: formData.username,
+          password: formData.password,
+        };
+        await loginMutation.mutateAsync(loginData);
+        await refetchUserInfo();
+        navigate("/home");
+      } catch (error) {
+        console.error("Sign up failed:", error);
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          form: error.message || "회원가입에 실패했습니다.",
+        }));
+      }
     }
   };
 
   return (
     <>
       <LandingNavbar />
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center py-16">
         <div className="w-full max-w-md">
           <form className="px-8 py-6" onSubmit={handleSubmit}>
             <h2 className="text-2xl font-bold text-center mb-4">회원가입</h2>
@@ -186,10 +210,17 @@ export default function SignUpPage() {
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none w-full"
                 type="submit"
+                disabled={signUpMutation.isLoading || loginMutation.isLoading}
               >
-                가입하기
+                {signUpMutation.isLoading || loginMutation.isLoading
+                  ? "처리 중..."
+                  : "가입하기"}
               </button>
             </div>
+
+            {errors.form && (
+              <p className="text-red-500 text-center mt-2">{errors.form}</p>
+            )}
           </form>
         </div>
       </div>
