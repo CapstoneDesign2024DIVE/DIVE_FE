@@ -1,10 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
-import LandingPage from "../pages/LandingPage";
-import LoginPage from "../pages/LoginPage";
-import SignUpPage from "../pages/SignUpPage";
-import HomePage from "../pages/HomePage";
+import LandingPage from "../pages/Landing";
+import LoginPage from "../pages/Login";
+import SignUpPage from "../pages/SignUp";
+import HomePage from "../pages/Home";
 
 const routes = [
   { path: "/", element: <LandingPage />, isPublic: true },

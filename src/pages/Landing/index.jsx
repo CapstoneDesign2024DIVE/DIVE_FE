@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import LandingNavbar from "../components/LandingNavbar";
+import LandingNavbar from "@components/Landing/Navbar";
 import { IoIosArrowDown } from "react-icons/io";
-import InterviewImage from "../assets/images/interview.png";
+import InterviewImage from "@assets/images/interview.png";
 
 export default function LandingPage() {
   const [showArrow, setShowArrow] = useState(true);

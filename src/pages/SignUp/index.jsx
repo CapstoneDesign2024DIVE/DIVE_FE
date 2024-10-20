@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signUp, login, useUserInfo } from "../apis/userAPI";
-import LandingNavbar from "../components/LandingNavbar";
+import { signUp, login, useUserInfo } from "@apis/userAPI";
+import LandingNavbar from "@components/Landing/Navbar";
 
 export default function SignUpPage() {
   const navigate = useNavigate();
@@ -90,22 +90,22 @@ export default function SignUpPage() {
   return (
     <>
       <LandingNavbar />
-      <div className="flex justify-center items-center py-16">
+      <div className="flex items-center justify-center py-16">
         <div className="w-full max-w-md">
           <form className="px-8 py-6" onSubmit={handleSubmit}>
-            <h2 className="text-2xl font-bold text-center mb-4">회원가입</h2>
+            <h2 className="mb-4 text-center font-bold text-2xl">회원가입</h2>
 
             <div className="mb-3">
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <label
-                  className="text-gray-700 text-sm font-bold mb-1.5"
+                  className="mb-1.5 font-bold text-sm text-gray-700"
                   htmlFor="username"
                 >
                   아이디
                 </label>
               </div>
               <input
-                className="font-medium text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+                className="w-full appearance-none rounded border px-3 py-2 font-medium text-sm leading-tight text-gray-700 focus:outline-none"
                 id="username"
                 name="username"
                 type="text"
@@ -116,16 +116,16 @@ export default function SignUpPage() {
             </div>
 
             <div className="mb-3">
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <label
-                  className="text-gray-700 text-sm font-bold mb-1.5"
+                  className="mb-1.5 font-bold text-sm text-gray-700"
                   htmlFor="password"
                 >
                   비밀번호
                 </label>
               </div>
               <input
-                className="font-medium text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+                className="w-full appearance-none rounded border px-3 py-2 font-medium text-sm leading-tight text-gray-700 focus:outline-none"
                 id="password"
                 name="password"
                 type="password"
@@ -136,21 +136,21 @@ export default function SignUpPage() {
             </div>
 
             <div className="mb-3">
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <label
-                  className="text-gray-700 text-sm font-bold mb-1.5"
+                  className="mb-1.5 font-bold text-sm text-gray-700"
                   htmlFor="confirmPassword"
                 >
                   비밀번호 확인
                 </label>
                 {errors.confirmPassword && (
-                  <span className="text-red-500 text-xs">
+                  <span className="text-xs text-red-500">
                     {errors.confirmPassword}
                   </span>
                 )}
               </div>
               <input
-                className="font-medium text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+                className="w-full appearance-none rounded border px-3 py-2 font-medium text-sm leading-tight text-gray-700 focus:outline-none"
                 id="confirmPassword"
                 name="confirmPassword"
                 type="password"
@@ -161,19 +161,19 @@ export default function SignUpPage() {
             </div>
 
             <div className="mb-3">
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <label
-                  className="text-gray-700 text-sm font-bold mb-1.5"
+                  className="mb-1.5 font-bold text-sm text-gray-700"
                   htmlFor="phone"
                 >
                   연락처
                 </label>
                 {errors.phone && (
-                  <span className="text-red-500 text-xs">{errors.phone}</span>
+                  <span className="text-xs text-red-500">{errors.phone}</span>
                 )}
               </div>
               <input
-                className="font-medium text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+                className="w-full appearance-none rounded border px-3 py-2 font-medium text-sm leading-tight text-gray-700 focus:outline-none"
                 id="phone"
                 name="phone"
                 type="tel"
@@ -184,19 +184,19 @@ export default function SignUpPage() {
             </div>
 
             <div className="mb-6">
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <label
-                  className="text-gray-700 text-sm font-bold mb-1.5"
+                  className="mb-1.5 font-bold text-sm text-gray-700"
                   htmlFor="email"
                 >
                   이메일
                 </label>
                 {errors.email && (
-                  <span className="text-red-500 text-xs">{errors.email}</span>
+                  <span className="text-xs text-red-500">{errors.email}</span>
                 )}
               </div>
               <input
-                className="font-medium text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+                className="w-full appearance-none rounded border px-3 py-2 font-medium text-sm leading-tight text-gray-700 focus:outline-none"
                 id="email"
                 name="email"
                 type="email"
@@ -208,7 +208,7 @@ export default function SignUpPage() {
 
             <div className="flex items-center justify-center">
               <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none w-full"
+                className="w-full rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
                 type="submit"
                 disabled={signUpMutation.isLoading || loginMutation.isLoading}
               >
@@ -219,7 +219,7 @@ export default function SignUpPage() {
             </div>
 
             {errors.form && (
-              <p className="text-red-500 text-center mt-2">{errors.form}</p>
+              <p className="mt-2 text-center text-red-500">{errors.form}</p>
             )}
           </form>
         </div>

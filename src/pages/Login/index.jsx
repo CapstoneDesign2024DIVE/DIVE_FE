@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { login, useUserInfo } from "../apis/userAPI";
-import LandingNavbar from "../components/LandingNavbar";
-import naverLogo from "../assets/icons/naver.svg";
-import kakaoLogo from "../assets/icons/kakao.svg";
+import { login, useUserInfo } from "@apis/userAPI";
+import LandingNavbar from "@components/Landing/Navbar";
+import naverLogo from "@assets/icons/naver.svg";
+import kakaoLogo from "@assets/icons/kakao.svg";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -36,22 +36,22 @@ export default function LoginPage() {
   return (
     <>
       <LandingNavbar />
-      <div className="flex justify-center items-center py-16">
+      <div className="flex items-center justify-center py-16">
         <div className="w-full max-w-md">
           <form className="px-8 py-6" onSubmit={handleSubmit}>
-            <h2 className="text-2xl font-bold text-center mb-4">로그인</h2>
+            <h2 className="mb-4 text-center font-bold text-2xl">로그인</h2>
 
             <div className="mb-3">
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <label
-                  className="text-gray-700 text-sm font-bold mb-1.5"
+                  className="mb-1.5 font-bold text-sm text-gray-700"
                   htmlFor="username"
                 >
                   아이디
                 </label>
               </div>
               <input
-                className="font-medium text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+                className="w-full appearance-none rounded border px-3 py-2 font-medium text-sm leading-tight text-gray-700 focus:outline-none"
                 id="username"
                 name="username"
                 type="text"
@@ -62,16 +62,16 @@ export default function LoginPage() {
             </div>
 
             <div className="mb-6">
-              <div className="flex justify-between items-center">
+              <div className="flex items-center justify-between">
                 <label
-                  className="text-gray-700 text-sm font-bold mb-1.5"
+                  className="mb-1.5 font-bold text-sm text-gray-700"
                   htmlFor="password"
                 >
                   비밀번호
                 </label>
               </div>
               <input
-                className="font-medium text-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+                className="w-full appearance-none rounded border px-3 py-2 font-medium text-sm leading-tight text-gray-700 focus:outline-none"
                 id="password"
                 name="password"
                 type="password"
@@ -81,9 +81,9 @@ export default function LoginPage() {
               />
             </div>
 
-            <div className="flex items-center justify-center mb-1.5">
+            <div className="mb-1.5 flex items-center justify-center">
               <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none w-full"
+                className="w-full rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
                 type="submit"
                 disabled={loginMutation.isLoading}
               >
@@ -92,12 +92,12 @@ export default function LoginPage() {
             </div>
 
             {loginMutation.isError && (
-              <p className="text-red-500 text-center mt-2">
+              <p className="mt-2 text-center text-red-500">
                 {loginMutation.error.message || "로그인에 실패했습니다."}
               </p>
             )}
 
-            <div className="flex justify-between font-medium text-sm mb-2">
+            <div className="mb-2 flex justify-between font-medium text-sm">
               <Link to="/find-account" className="text-gray-700">
                 아이디/비밀번호 찾기
               </Link>
@@ -106,23 +106,23 @@ export default function LoginPage() {
               </Link>
             </div>
 
-            <div className="relative flex py-5 items-center font-medium">
+            <div className="relative flex items-center py-5 font-medium">
               <div className="flex-grow border-t border-gray-300"></div>
-              <span className="flex-shrink mx-4 text-gray-400">또는</span>
+              <span className="mx-4 flex-shrink text-gray-400">또는</span>
               <div className="flex-grow border-t border-gray-300"></div>
             </div>
 
             <div className="space-y-3">
               <button
-                className="text-white font-bold py-2 px-4 rounded focus:outline-none w-full"
+                className="w-full rounded px-4 py-2 font-bold text-white focus:outline-none"
                 type="button"
                 style={{ backgroundColor: "#03c75a" }}
               >
-                <div className="flex items-center justify-center relative">
+                <div className="relative flex items-center justify-center">
                   <img
                     src={naverLogo}
                     alt="Naver logo"
-                    className="w-8 h-8 absolute left-0"
+                    className="absolute left-0 h-8 w-8"
                   />
                   <span className="flex-grow text-center">
                     네이버로 시작하기
@@ -130,17 +130,17 @@ export default function LoginPage() {
                 </div>
               </button>
               <button
-                className="font-bold py-2 px-4 rounded focus:outline-none w-full"
+                className="w-full rounded px-4 py-2 font-bold focus:outline-none"
                 type="button"
                 style={{
                   backgroundColor: "#FEE500",
                 }}
               >
-                <div className="flex items-center justify-center relative">
+                <div className="relative flex items-center justify-center">
                   <img
                     src={kakaoLogo}
                     alt="Kakao logo"
-                    className="w-4 h-4 absolute left-2"
+                    className="absolute left-2 h-4 w-4"
                   />
                   <span
                     style={{ color: "rgba(0, 0, 0, 0.85)" }}
