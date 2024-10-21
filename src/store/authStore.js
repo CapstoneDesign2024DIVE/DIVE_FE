@@ -5,16 +5,24 @@ const useAuthStore = create(
   persist(
     (set) => ({
       isAuthenticated: false,
-      token: null,
-      login: (token) => set({ isAuthenticated: true, token }),
-      logout: () => set({ isAuthenticated: false, token: null }),
+      accessToken: null,
+      refreshToken: null,
+      key: null,
+      login: ({ accessToken, refreshToken, key }) =>
+        set({ isAuthenticated: true, accessToken, refreshToken, key }),
+      logout: () =>
+        set({
+          isAuthenticated: false,
+          accessToken: null,
+          refreshToken: null,
+          key: null,
+        }),
     }),
     {
       name: "auth-storage",
       getStorage: () => sessionStorage,
-      partialize: (state) => ({ token: state.token }),
-    }
-  )
+    },
+  ),
 );
 
 export default useAuthStore;

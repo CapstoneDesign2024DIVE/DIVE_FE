@@ -1,46 +1,29 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signUp, login, useUserInfo } from "@apis/userAPI";
+import { signUp, login } from "@apis/userAPI";
 import LandingNavbar from "@components/Landing/Navbar";
 
 export default function SignUpPage() {
   const navigate = useNavigate();
   const signUpMutation = signUp();
   const loginMutation = login();
-  const { refetch: refetchUserInfo } = useUserInfo();
 
   const [formData, setFormData] = useState({
     username: "",
+    nickname: "",
     password: "",
     confirmPassword: "",
-    phone: "",
     email: "",
   });
 
   const [errors, setErrors] = useState({});
 
-  const formatPhoneNumber = (value) => {
-    const phoneNumber = value.replace(/[^\d]/g, "");
-    const phoneNumberLength = phoneNumber.length;
-    if (phoneNumberLength < 4) return phoneNumber;
-    if (phoneNumberLength < 7)
-      return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3)}`;
-    return `${phoneNumber.slice(0, 3)}-${phoneNumber.slice(3, 7)}-${phoneNumber.slice(7, 11)}`;
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "phone") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: formatPhoneNumber(value),
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const validateForm = () => {
@@ -50,14 +33,13 @@ export default function SignUpPage() {
       newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
     }
 
-    const phoneRegex = /^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/;
-    if (!phoneRegex.test(formData.phone)) {
-      newErrors.phone = "올바른 연락처 형식이 아닙니다.";
-    }
-
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       newErrors.email = "올바른 이메일 형식이 아닙니다.";
+    }
+
+    if (formData.nickname.trim() === "") {
+      newErrors.nickname = "닉네임을 입력해주세요.";
     }
 
     setErrors(newErrors);
@@ -75,7 +57,6 @@ export default function SignUpPage() {
           password: formData.password,
         };
         await loginMutation.mutateAsync(loginData);
-        await refetchUserInfo();
         navigate("/home");
       } catch (error) {
         console.error("Sign up failed:", error);
@@ -111,6 +92,31 @@ export default function SignUpPage() {
                 type="text"
                 placeholder="아이디"
                 value={formData.username}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="mb-3">
+              <div className="flex items-center justify-between">
+                <label
+                  className="mb-1.5 font-bold text-sm text-gray-700"
+                  htmlFor="nickname"
+                >
+                  닉네임
+                </label>
+                {errors.nickname && (
+                  <span className="text-xs text-red-500">
+                    {errors.nickname}
+                  </span>
+                )}
+              </div>
+              <input
+                className="w-full appearance-none rounded border px-3 py-2 font-medium text-sm leading-tight text-gray-700 focus:outline-none"
+                id="nickname"
+                name="nickname"
+                type="text"
+                placeholder="닉네임"
+                value={formData.nickname}
                 onChange={handleChange}
               />
             </div>
@@ -156,29 +162,6 @@ export default function SignUpPage() {
                 type="password"
                 placeholder="비밀번호 확인"
                 value={formData.confirmPassword}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="mb-3">
-              <div className="flex items-center justify-between">
-                <label
-                  className="mb-1.5 font-bold text-sm text-gray-700"
-                  htmlFor="phone"
-                >
-                  연락처
-                </label>
-                {errors.phone && (
-                  <span className="text-xs text-red-500">{errors.phone}</span>
-                )}
-              </div>
-              <input
-                className="w-full appearance-none rounded border px-3 py-2 font-medium text-sm leading-tight text-gray-700 focus:outline-none"
-                id="phone"
-                name="phone"
-                type="tel"
-                placeholder="연락처"
-                value={formData.phone}
                 onChange={handleChange}
               />
             </div>

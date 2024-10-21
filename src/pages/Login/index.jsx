@@ -1,18 +1,34 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { login, useUserInfo } from "@apis/userAPI";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { login, socialLogin } from "@apis/userAPI";
 import LandingNavbar from "@components/Landing/Navbar";
 import naverLogo from "@assets/icons/naver.svg";
 import kakaoLogo from "@assets/icons/kakao.svg";
 
+const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
+const NAVER_CLIENT_ID = import.meta.env.VITE_NAVER_CLIENT_ID;
+const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
+
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const loginMutation = login();
-  const { refetch: refetchUserInfo } = useUserInfo();
+  const socialLoginMutation = socialLogin();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const code = urlParams.get("code");
+    const state = urlParams.get("state");
+
+    if (code) {
+      const provider = state === "STATE_STRING" ? "naver" : "kakao";
+      handleSocialLogin(code, provider);
+    }
+  }, [location]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,13 +41,35 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await loginMutation.mutateAsync(formData);
-      await refetchUserInfo();
-      navigate("/home");
+      const response = await loginMutation.mutateAsync(formData);
+      if (response.accessToken) {
+        navigate("/home");
+      } else {
+        console.error("로그인 실패: 토큰을 받지 못했습니다");
+      }
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("로그인 실패:", error);
     }
   };
+
+  const handleSocialLogin = async (code, provider) => {
+    try {
+      const response = await socialLoginMutation.mutateAsync({
+        code,
+        provider,
+      });
+      if (response.accessToken) {
+        navigate("/home");
+      } else {
+        console.error("소셜 로그인 실패: 토큰을 받지 못했습니다");
+      }
+    } catch (error) {
+      console.error("소셜 로그인 실패:", error);
+    }
+  };
+
+  const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${FRONTEND_URL}/login/oauth2/code/kakao`;
+  const naverLoginUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=STATE_STRING&redirect_uri=${FRONTEND_URL}/login/oauth2/code/naver`;
 
   return (
     <>
@@ -113,9 +151,9 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-3">
-              <button
-                className="w-full rounded px-4 py-2 font-bold text-white focus:outline-none"
-                type="button"
+              <a
+                href={naverLoginUrl}
+                className="block w-full rounded px-4 py-2 text-center font-bold text-white focus:outline-none"
                 style={{ backgroundColor: "#03c75a" }}
               >
                 <div className="relative flex items-center justify-center">
@@ -128,10 +166,10 @@ export default function LoginPage() {
                     네이버로 시작하기
                   </span>
                 </div>
-              </button>
-              <button
-                className="w-full rounded px-4 py-2 font-bold focus:outline-none"
-                type="button"
+              </a>
+              <a
+                href={kakaoLoginUrl}
+                className="block w-full rounded px-4 py-2 text-center font-bold focus:outline-none"
                 style={{
                   backgroundColor: "#FEE500",
                 }}
@@ -149,7 +187,7 @@ export default function LoginPage() {
                     카카오로 시작하기
                   </span>
                 </div>
-              </button>
+              </a>
             </div>
           </form>
         </div>
