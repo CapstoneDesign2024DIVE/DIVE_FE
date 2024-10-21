@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp, login } from "@apis/userAPI";
-import LandingNavbar from "@components/Landing/Navbar";
 
 export default function SignUpPage() {
   const navigate = useNavigate();
@@ -70,7 +69,6 @@ export default function SignUpPage() {
 
   return (
     <>
-      <LandingNavbar />
       <div className="flex items-center justify-center py-16">
         <div className="w-full max-w-md">
           <form className="px-8 py-6" onSubmit={handleSubmit}>

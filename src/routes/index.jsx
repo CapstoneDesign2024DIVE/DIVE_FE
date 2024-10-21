@@ -1,10 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
+import ProtectedLayout from "./ProtectedLayout";
 import PublicRoute from "./PublicRoute";
-import LandingPage from "../pages/Landing";
-import LoginPage from "../pages/Login";
-import SignUpPage from "../pages/SignUp";
-import HomePage from "../pages/Home";
+import PublicLayout from "./PublicLayout";
+import LandingPage from "@pages/Landing";
+import LoginPage from "@pages/Login";
+import SignUpPage from "@pages/SignUp";
+import HomePage from "@pages/Home";
 
 const routes = [
   { path: "/", element: <LandingPage />, isPublic: true },
@@ -22,9 +24,13 @@ export default function AppRoutes() {
           path={path}
           element={
             isPublic ? (
-              <PublicRoute>{element}</PublicRoute>
+              <PublicRoute>
+                <PublicLayout>{element}</PublicLayout>
+              </PublicRoute>
             ) : (
-              <ProtectedRoute>{element}</ProtectedRoute>
+              <ProtectedRoute>
+                <ProtectedLayout>{element}</ProtectedLayout>
+              </ProtectedRoute>
             )
           }
         />

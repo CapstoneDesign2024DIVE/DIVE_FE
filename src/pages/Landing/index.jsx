@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import LandingNavbar from "@components/Landing/Navbar";
 import { IoIosArrowDown } from "react-icons/io";
 import InterviewImage from "@assets/images/interview.png";
 
@@ -32,7 +31,6 @@ export default function LandingPage() {
 
   return (
     <div className="h-screen snap-y snap-mandatory overflow-y-scroll scrollbar-hide">
-      <LandingNavbar />
       <main className="bg-[#F5F5F7]">
         <section
           className="flex h-screen snap-start flex-col justify-start bg-contain bg-right-bottom bg-no-repeat px-20 pt-32"

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { login, socialLogin } from "@apis/userAPI";
-import LandingNavbar from "@components/Landing/Navbar";
 import naverLogo from "@assets/icons/naver.svg";
 import kakaoLogo from "@assets/icons/kakao.svg";
 
@@ -73,7 +72,6 @@ export default function LoginPage() {
 
   return (
     <>
-      <LandingNavbar />
       <div className="flex items-center justify-center py-16">
         <div className="w-full max-w-md">
           <form className="px-8 py-6" onSubmit={handleSubmit}>
