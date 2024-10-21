@@ -22,7 +22,7 @@ export default function NotificationModal({ onClick }) {
 
   return (
     <div
-      className="absolute right-0 mt-2 w-80 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+      className="absolute right-0 z-10 mt-2 w-80 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
       onClick={onClick}
     >
       <div className="border-b border-gray-200 px-4 py-3">
