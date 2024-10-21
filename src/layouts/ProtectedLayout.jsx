@@ -6,7 +6,7 @@ export default function PublicLayout({ children }) {
     <>
       <Navbar />
       <UserNavbar />
-      {children}
+      <div className="absolute left-60 top-20">{children}</div>
     </>
   );
 }

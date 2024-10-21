@@ -1,7 +1,5 @@
-import { Link } from "react-router-dom";
 import { FaCaretDown } from "react-icons/fa";
-
-export default function MenuItem({ title, items, isOpen, onClick, onClose }) {
+export default function MenuItem({ title, items, isOpen, onClick }) {
   return (
     <div className="my-2 pl-4">
       <button
@@ -22,14 +20,12 @@ export default function MenuItem({ title, items, isOpen, onClick, onClose }) {
         }`}
       >
         {items.map((item, index) => (
-          <Link
+          <button
             key={index}
-            to={item.path}
-            className="block rounded-xl py-2 pl-4 font-medium text-base hover:bg-gray-100"
-            onClick={onClose}
+            className="block w-full rounded-xl py-2 pl-4 text-left font-medium text-base hover:bg-gray-100"
           >
             {item.name}
-          </Link>
+          </button>
         ))}
       </div>
     </div>

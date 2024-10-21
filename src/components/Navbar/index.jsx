@@ -1,31 +1,33 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MenuItem from "./MenuItem";
 
 export default function Navbar() {
   const [openMenuItem, setOpenMenuItem] = useState(null);
+  const navigate = useNavigate();
 
   const interviewVideos = [
-    { name: "ALL", path: "/videos" },
-    { name: "Frontend", path: "/videos/frontend" },
-    { name: "Backend", path: "/videos/backend" },
-    { name: "Android", path: "/videos/android" },
-    { name: "iOS", path: "/videos/ios" },
-    { name: "DevOps", path: "/videos/devops" },
+    { name: "ALL" },
+    { name: "Frontend" },
+    { name: "Backend" },
+    { name: "Android" },
+    { name: "iOS" },
+    { name: "DevOps" },
   ];
 
-  const interviewSets = [
-    { name: "ALL", path: "/interviewSets" },
-    { name: "Frontend", path: "/interviewSets/frontend" },
-    { name: "Backend", path: "/interviewSets/backend" },
-    { name: "Android", path: "/interviewSets/android" },
-    { name: "iOS", path: "/interviewSets/ios" },
-    { name: "DevOps", path: "/interviewSets/devops" },
-    { name: "CS", path: "/interviewSets/cs" },
+  const questionSets = [
+    { name: "ALL" },
+    { name: "Frontend" },
+    { name: "Backend" },
+    { name: "Android" },
+    { name: "iOS" },
+    { name: "DevOps" },
+    { name: "CS" },
   ];
 
-  const handleMenuItemClick = (index) => {
+  const handleMenuItemClick = (index, path) => {
     setOpenMenuItem((prevOpen) => (prevOpen === index ? null : index));
+    navigate(path);
   };
 
   return (
@@ -46,15 +48,13 @@ export default function Navbar() {
           title="면접 영상 보기"
           items={interviewVideos}
           isOpen={openMenuItem === 0}
-          onClick={() => handleMenuItemClick(0)}
-          onClose={() => setOpenMenuItem(null)}
+          onClick={() => handleMenuItemClick(0, "/videos")}
         />
         <MenuItem
           title="면접 세트 보기"
-          items={interviewSets}
+          items={questionSets}
           isOpen={openMenuItem === 1}
-          onClick={() => handleMenuItemClick(1)}
-          onClose={() => setOpenMenuItem(null)}
+          onClick={() => handleMenuItemClick(1, "/questionSets")}
         />
         <Link
           to="/resumes"
