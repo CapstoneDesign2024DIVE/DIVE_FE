@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
-import ProtectedLayout from "./ProtectedLayout";
+import ProtectedLayout from "@layouts/ProtectedLayout";
 import PublicRoute from "./PublicRoute";
-import PublicLayout from "./PublicLayout";
+import PublicLayout from "@layouts/PublicLayout";
 import LandingPage from "@pages/Landing";
 import LoginPage from "@pages/Login";
 import SignUpPage from "@pages/SignUp";
