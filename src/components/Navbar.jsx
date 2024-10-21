@@ -30,6 +30,11 @@ export default function Navbar() {
     navigate(path);
   };
 
+  const handleLinkClick = (path) => {
+    setOpenMenuItem(null);
+    navigate(path);
+  };
+
   return (
     <nav className="fixed left-0 top-0 h-full w-56 bg-white">
       <div className="flex flex-col px-3 py-5">
@@ -41,6 +46,7 @@ export default function Navbar() {
         <Link
           to="/practice"
           className="block rounded-xl py-2 pl-4 font-medium text-lg hover:bg-gray-100"
+          onClick={() => handleLinkClick("/practice")}
         >
           면접 연습하기
         </Link>
@@ -59,6 +65,7 @@ export default function Navbar() {
         <Link
           to="/resumes"
           className="block rounded-xl py-2 pl-4 font-medium text-lg hover:bg-gray-100"
+          onClick={() => handleLinkClick("/resumes")}
         >
           합격자 이력서
         </Link>

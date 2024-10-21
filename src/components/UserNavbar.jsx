@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaBell, FaUser } from "react-icons/fa";
-import UserModal from "@components/Modals/UserModal";
-import NotificationModal from "@components/Modals/NotificationModal";
+import UserModal from "@components/UserModal";
+import NotificationModal from "@components/NotificationModal";
 
 export default function UserNavbar() {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
