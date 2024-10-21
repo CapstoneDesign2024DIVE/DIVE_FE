@@ -125,16 +125,3 @@ export const signUp = () => {
     },
   });
 };
-
-export const logout = () => {
-  const queryClient = useQueryClient();
-  const logoutStore = useAuthStore((state) => state.logout);
-
-  return useMutation({
-    mutationFn: () => api.post("/siteUser/logout"),
-    onSuccess: () => {
-      logoutStore();
-      queryClient.clear();
-    },
-  });
-};
