@@ -1,6 +1,26 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@utils/axios";
 import useAuthStore from "@store/authStore";
+
+const getMockUserInfo = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 100));
+
+  return {
+    nickname: "testuser",
+    email: "test@test.com",
+  };
+};
+
+export const useGetUserInfo = () => {
+  return useQuery({
+    queryKey: ["user"],
+    queryFn: getMockUserInfo,
+    // async () => {
+    //   const response = await api.get("/siteUser/me");
+    //   return response.data;
+    // },
+  });
+};
 
 export const login = () => {
   const queryClient = useQueryClient();
