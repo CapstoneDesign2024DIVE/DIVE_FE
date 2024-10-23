@@ -11,6 +11,9 @@ import QuestionSetPage from "@pages/QuestionSet";
 import VideoPage from "@pages/Video";
 import ResumePage from "@pages/Resume";
 import PracticePage from "@pages/Practice";
+import MyPage from "@pages/MyPage";
+import MyVideo from "@pages/MyPage/Video";
+import MyQuestionSet from "@pages/MyPage/QuestionSet";
 
 const routes = [
   { path: "/", element: <LandingPage />, isPublic: true },
@@ -21,6 +24,21 @@ const routes = [
   { path: "/videos", element: <VideoPage />, isPublic: false },
   { path: "/resumes", element: <ResumePage />, isPublic: false },
   { path: "/practice", element: <PracticePage />, isPublic: false },
+  {
+    path: "/myPage",
+    element: <MyPage />,
+    isPublic: false,
+  },
+  {
+    path: "/myPage/video",
+    element: <MyVideo />,
+    isPublic: false,
+  },
+  {
+    path: "/myPage/questionSet",
+    element: <MyQuestionSet />,
+    isPublic: false,
+  },
 ];
 
 export default function AppRoutes() {
