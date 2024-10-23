@@ -1,14 +1,120 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import api from "@utils/axios";
+
+const mockQuestionSets = [
+  {
+    id: 1,
+    imageUrl: "https://randomuser.me/api/portraits/men/1.jpg",
+    username: "dev_hong",
+    nickname: "프론트엔드 홍",
+    refCount: 42,
+    title: "프론트엔드 기술 면접 필수 질문",
+    description:
+      "React, JavaScript, TypeScript 등 프론트엔드 개발자가 알아야 할 핵심 질문들을 정리했습니다.",
+    category: "Frontend",
+    questions: [
+      { id: 1, contents: "React의 생명주기에 대해 설명해주세요." },
+      { id: 2, contents: "클로저란 무엇인가요?" },
+    ],
+    open: true,
+    createdAt: "2024-03-15T09:00:00Z",
+  },
+  {
+    id: 2,
+    imageUrl: "https://randomuser.me/api/portraits/women/1.jpg",
+    username: "backend_kim",
+    nickname: "백엔드 김",
+    refCount: 35,
+    title: "Java Spring 면접 대비 질문",
+    description:
+      "Spring Framework, JPA, 디자인 패턴 등 백엔드 개발자 면접 필수 질문 모음입니다.",
+    category: "Backend",
+    questions: [
+      { id: 3, contents: "스프링의 IoC란 무엇인가요?" },
+      { id: 4, contents: "JPA N+1 문제란 무엇인가요?" },
+    ],
+    open: true,
+    createdAt: "2024-03-14T15:30:00Z",
+  },
+  {
+    id: 3,
+    imageUrl: "https://randomuser.me/api/portraits/men/2.jpg",
+    username: "devops_lee",
+    nickname: "데브옵스 이",
+    refCount: 28,
+    title: "DevOps 엔지니어 면접 질문",
+    description:
+      "Docker, Kubernetes, CI/CD 등 데브옵스 엔지니어 면접에서 자주 나오는 질문들입니다.",
+    category: "DevOps",
+    questions: [
+      { id: 5, contents: "컨테이너와 가상머신의 차이점은?" },
+      { id: 6, contents: "무중단 배포란 무엇인가요?" },
+    ],
+    open: true,
+    createdAt: "2024-03-13T11:20:00Z",
+  },
+  {
+    id: 4,
+    imageUrl: "https://randomuser.me/api/portraits/men/3.jpg",
+    username: "testuser",
+    nickname: "testuser",
+    refCount: 15,
+    title: "나만의 리액트 면접 질문",
+    description:
+      "리액트 개발자 면접을 위해 제가 직접 정리한 질문들입니다. 실제 면접에서 받았던 질문들 위주로 구성했어요.",
+    category: "Frontend",
+    questions: [
+      { id: 7, contents: "리액트의 상태관리 방법들에 대해 설명해주세요." },
+      { id: 8, contents: "리액트의 렌더링 최적화 방법은?" },
+    ],
+    open: false,
+    createdAt: "2024-03-12T16:45:00Z",
+  },
+  {
+    id: 5,
+    imageUrl: "https://randomuser.me/api/portraits/men/3.jpg",
+    username: "testuser",
+    nickname: "testuser",
+    refCount: 8,
+    title: "CS 기본 면접 질문 모음",
+    description:
+      "운영체제, 네트워크, 자료구조 등 전산학 기본 지식 면접 질문을 정리했습니다.",
+    category: "CS",
+    questions: [
+      { id: 9, contents: "프로세스와 스레드의 차이는?" },
+      { id: 10, contents: "TCP와 UDP의 차이점은?" },
+    ],
+    open: true,
+    createdAt: "2024-03-11T13:15:00Z",
+  },
+  {
+    id: 6,
+    imageUrl: "https://randomuser.me/api/portraits/men/3.jpg",
+    username: "testuser",
+    nickname: "testuser",
+    refCount: 12,
+    title: "자바스크립트 심화 질문",
+    description:
+      "자바스크립트의 심화 개념들을 다루는 면접 질문들입니다. 프로토타입, 이벤트 루프 등을 포함합니다.",
+    category: "Frontend",
+    questions: [
+      { id: 11, contents: "이벤트 루프란 무엇인가요?" },
+      { id: 12, contents: "프로토타입 체이닝이란?" },
+    ],
+    open: true,
+    createdAt: "2024-03-10T09:30:00Z",
+  },
+];
 
 export const useGetQuestionSets = (sortOrder) => {
   return useQuery({
     queryKey: ["questionSets", sortOrder],
     queryFn: async () => {
-      const response = await api.get("/questionSet/all", {
-        params: { sort: sortOrder },
-      });
-      return response.data;
+      return mockQuestionSets;
+      // const response = await api.get("/questionSet/all", {
+      //   params: { sort: sortOrder },
+      // });
+      // return response.data;
     },
     select: (data) => {
       const sortedData = [...data].sort((a, b) => {
@@ -28,36 +134,13 @@ export const useGetQuestionSets = (sortOrder) => {
   });
 };
 
-export const useGetQuestionSet = (id) => {
+export const useGetMyQuestionSets = () => {
   return useQuery({
-    queryKey: ["questionSet", id],
+    queryKey: ["myQuestionSets"],
     queryFn: async () => {
-      const response = await api.get(`/questionSet/${id}`);
-      return response.data;
-    },
-    enabled: !!id,
-  });
-};
-
-export const useSaveQuestionSet = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (id) => {
-      const response = await api.post(`/questionSet/${id}/save`);
-      return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["questionSets"]);
-    },
-  });
-};
-
-export const useStartPractice = () => {
-  return useMutation({
-    mutationFn: async (id) => {
-      const response = await api.post(`/questionSet/${id}/practice`);
-      return response.data;
+      return mockQuestionSets.filter((set) => set.username === "testuser");
+      // const response = await api.get("/questionSet/mySets");
+      // return response.data;
     },
   });
 };

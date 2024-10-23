@@ -1,11 +1,14 @@
-import { useState } from "react";
 import { FaCaretDown } from "react-icons/fa";
 
-export default function MenuItem({ title, items, isOpen, onClick }) {
-  const [selectedItem, setSelectedItem] = useState(0);
-
-  const handleItemClick = (itemName) => {
-    setSelectedItem(itemName);
+export default function MenuItem({
+  title,
+  items,
+  isOpen,
+  onClick,
+  onItemClick,
+}) {
+  const handleItemClick = (index) => {
+    onItemClick?.(index);
   };
 
   return (
@@ -30,12 +33,10 @@ export default function MenuItem({ title, items, isOpen, onClick }) {
         {items.map((item, index) => (
           <button
             key={index}
-            className={`block w-full rounded-xl py-2 pl-4 text-left font-medium text-base hover:bg-gray-100 ${
-              selectedItem === index ? "bg-gray-100" : ""
-            }`}
+            className="block w-full rounded-xl py-2 pl-4 text-left font-medium text-base hover:bg-gray-100"
             onClick={() => handleItemClick(index)}
           >
-            {item.name}
+            {item}
           </button>
         ))}
       </div>
