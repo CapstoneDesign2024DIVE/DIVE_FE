@@ -12,7 +12,7 @@ export default function QuestionSet({
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/questionSet/${id}`);
+    navigate(`/questionSets/${id}`);
   };
 
   return (

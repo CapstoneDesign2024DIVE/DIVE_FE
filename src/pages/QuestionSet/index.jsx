@@ -10,6 +10,18 @@ export default function QuestionSetPage() {
   const sortOrder = useSortStore((state) => state.sortOrder);
   const { data: questionSets } = useGetQuestionSets(sortOrder);
 
+  const getCategoryStyle = (category) => {
+    const styles = {
+      Frontend: "bg-indigo-100 text-indigo-800",
+      Backend: "bg-green-100 text-green-800",
+      Android: "bg-red-100 text-red-800",
+      iOS: "bg-amber-100 text-amber-800",
+      DevOps: "bg-purple-100 text-purple-800",
+      CS: "bg-orange-100 text-orange-800",
+    };
+    return styles[category] || "bg-gray-100 text-gray-800";
+  };
+
   const filteredQuestionSets = questionSets
     ?.filter((set) => set.open)
     .filter((set) => {
@@ -23,7 +35,9 @@ export default function QuestionSetPage() {
         <div className="flex items-center gap-4">
           <h2 className="font-bold text-2xl">공개된 면접 세트</h2>
           {category && category !== "ALL" && (
-            <span className="rounded bg-blue-100 px-2 py-1 font-medium text-sm text-blue-800">
+            <span
+              className={`rounded-md px-2 py-1 font-medium text-sm ${getCategoryStyle(category)}`}
+            >
               {category}
             </span>
           )}
