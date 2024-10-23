@@ -5,6 +5,7 @@ export default function QuestionSetCard({
   isSelected,
   onClick,
   getCategoryStyle,
+  onMenuClick,
 }) {
   return (
     <div
@@ -37,6 +38,7 @@ export default function QuestionSetCard({
         <button
           onClick={(e) => {
             e.stopPropagation();
+            onMenuClick(set.id);
           }}
           className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"
         >
