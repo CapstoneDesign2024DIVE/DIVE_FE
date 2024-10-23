@@ -33,7 +33,7 @@ export default function QuestionSetPage() {
           <SortButton />
         </div>
       </div>
-      <div className="flex flex-wrap justify-start gap-6">
+      <div className="flex flex-wrap justify-start gap-3">
         {filteredQuestionSets?.map((questionSet) => (
           <QuestionSet key={questionSet.id} {...questionSet} />
         ))}
