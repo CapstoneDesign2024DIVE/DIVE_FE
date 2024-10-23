@@ -1,12 +1,13 @@
 import { useGetMyQuestionSets } from "@apis/questionSetAPI";
-import { useSearchParams } from "react-router-dom";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { HiPlus } from "react-icons/hi";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
+import { useState } from "react";
 
 export default function MyQuestionSet() {
-  const { data: questionSets, isLoading } = useGetMyQuestionSets();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const selectedSetId = searchParams.get("setId");
+  const { data: questionSets } = useGetMyQuestionSets();
+  const [selectedSetId, setSelectedSetId] = useState(null);
+  const [selectedQuestionId, setSelectedQuestionId] = useState(null);
 
   const getCategoryStyle = (category) => {
     const styles = {
@@ -20,44 +21,14 @@ export default function MyQuestionSet() {
     return styles[category] || "bg-gray-100 text-gray-800";
   };
 
-  const selectedSet = questionSets?.find(
-    (set) => set.id === Number(selectedSetId),
-  );
-
-  if (isLoading) {
-    return (
-      <div className="flex h-[calc(100vh-96px)] w-full overflow-hidden">
-        <div className="w-[500px]">
-          <div className="sticky top-0 flex items-center justify-between bg-white p-4">
-            <h2 className="font-bold text-2xl">내 면접 세트</h2>
-            <button className="rounded-full p-1 text-gray-500 hover:bg-gray-100">
-              <HiPlus size={20} />
-            </button>
-          </div>
-          <div className="h-[calc(100vh-144px)] overflow-y-auto px-4">
-            <div className="space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="w-full animate-pulse rounded-lg border border-gray-200 bg-white p-4"
-                >
-                  <div className="mb-3 h-6 w-1/3 rounded bg-gray-200"></div>
-                  <div className="h-4 w-2/3 rounded bg-gray-200"></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const selectedSet = questionSets?.find((set) => set.id === selectedSetId);
 
   return (
     <div className="flex h-[calc(100vh-48px)] w-full overflow-hidden">
-      <div className="w-[calc((100vw-256px)*2/5)] flex-shrink-0">
+      <div className="w-[calc((100vw-256px)*0.4)] flex-shrink-0">
         <div className="sticky top-0 z-10 flex items-center justify-between bg-white p-4">
           <h2 className="font-bold text-2xl">내 면접 세트</h2>
-          <button className="rounded-full p-1 text-gray-500 hover:bg-gray-100">
+          <button className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100">
             <HiPlus size={20} />
           </button>
         </div>
@@ -66,10 +37,15 @@ export default function MyQuestionSet() {
             {questionSets?.map((set) => (
               <div
                 key={set.id}
-                className={`group relative w-full cursor-pointer overflow-visible rounded-lg border border-gray-200 bg-white p-4 transition-all duration-300 ease-in-out ${
-                  set.id === Number(selectedSetId) ? "border-indigo-500" : ""
+                className={`group relative w-full cursor-pointer overflow-visible rounded-lg border bg-white p-4 transition-all duration-300 ease-in-out ${
+                  set.id === selectedSetId
+                    ? "border-indigo-500"
+                    : "border-gray-200 hover:border-gray-300"
                 }`}
-                onClick={() => setSearchParams({ setId: set.id.toString() })}
+                onClick={() => {
+                  setSelectedSetId(set.id === selectedSetId ? null : set.id);
+                  setSelectedQuestionId(null);
+                }}
               >
                 <div className="mb-4 flex items-center justify-between">
                   <div className="flex gap-3">
@@ -94,7 +70,7 @@ export default function MyQuestionSet() {
                     onClick={(e) => {
                       e.stopPropagation();
                     }}
-                    className="rounded-full p-1 text-gray-500 hover:bg-gray-100"
+                    className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"
                   >
                     <BsThreeDotsVertical size={16} />
                   </button>
@@ -110,28 +86,86 @@ export default function MyQuestionSet() {
           </div>
         </div>
       </div>
-
       {selectedSet ? (
-        <div className="flex w-[calc((100vw-256px)*3/5)] flex-1 flex-col overflow-hidden">
+        <div className="flex w-[calc((100vw-256px)*0.6)] flex-1 flex-col overflow-hidden">
           <div className="sticky top-0 z-10 flex items-center justify-between bg-white p-4">
             <h2 className="font-bold text-2xl">{selectedSet.title}</h2>
-            <button className="rounded-full p-1 text-gray-500 hover:bg-gray-100">
-              <HiPlus size={20} />
-            </button>
+            <div className="flex gap-1">
+              <button
+                className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <BsThreeDotsVertical size={16} />
+              </button>
+              <button
+                className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <HiPlus size={20} />
+              </button>
+            </div>
           </div>
           <div className="flex-1 overflow-y-auto">
             <div className="px-4">
               <div className="space-y-2">
-                {selectedSet.questions.map((question) => (
-                  <div
-                    key={question.id}
-                    className="w-full rounded-lg border border-gray-200 bg-white p-4"
-                  >
-                    <p className="w-full font-medium text-base text-gray-900">
-                      {question.contents}
-                    </p>
-                  </div>
-                ))}
+                {selectedSet.questions.map((question) => {
+                  const isSelected = selectedQuestionId === question.id;
+                  return (
+                    <div
+                      key={question.id}
+                      className={`group relative w-full cursor-pointer overflow-hidden rounded-lg border bg-white transition-all duration-200 ${
+                        isSelected
+                          ? "border-indigo-500"
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
+                      onClick={() =>
+                        setSelectedQuestionId(isSelected ? null : question.id)
+                      }
+                    >
+                      <div className="relative flex w-full items-center">
+                        <div className="w-full p-3">
+                          <p className="font-medium text-base text-gray-900">
+                            {question.contents}
+                          </p>
+                        </div>
+                        <div
+                          className={`absolute right-0 top-0 flex h-full w-24 transform items-center justify-center overflow-hidden transition-all duration-200 ${
+                            isSelected ? "w-24" : "w-0"
+                          }`}
+                        >
+                          <div
+                            className={`flex h-full items-center justify-end transition-opacity duration-200 ${
+                              isSelected ? "opacity-100" : "opacity-0"
+                            }`}
+                          >
+                            <button
+                              className="flex h-12 w-12 items-center justify-center bg-gray-200 text-gray-600 transition-colors hover:bg-gray-300"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                // 수정 동작
+                              }}
+                            >
+                              <FiEdit2 size={18} />
+                            </button>
+                            <button
+                              className="flex h-12 w-12 items-center justify-center bg-red-200 text-red-600 transition-colors hover:bg-red-300"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                // 삭제 동작
+                              }}
+                            >
+                              <FiTrash2 size={18} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
