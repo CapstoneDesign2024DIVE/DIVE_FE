@@ -24,7 +24,7 @@ export default function MenuItem({ title, items, isOpen, onClick }) {
       </button>
       <div
         className={`overflow-hidden transition-all duration-500 ${
-          isOpen ? "max-h-96" : "max-h-0"
+          isOpen ? "mt-2 max-h-96" : "max-h-0"
         }`}
       >
         {items.map((item, index) => (
