@@ -9,14 +9,22 @@ export default function QuestionSetPage() {
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
   const sortOrder = useSortStore((state) => state.sortOrder);
-  const { data: questionSets } = useGetQuestionSets(sortOrder);
+  const { data: questionSets, isLoading } = useGetQuestionSets(sortOrder);
 
-  const filteredQuestionSets = questionSets
-    ?.filter((set) => set.open)
-    .filter((set) => {
-      if (!category || category === "ALL") return true;
-      return set.category === category;
-    });
+  if (isLoading) {
+    return (
+      <div className="p-4">
+        <div className="flex h-[50vh] items-center justify-center">
+          <div>Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  const filteredQuestionSets = questionSets.filter((set) => {
+    if (!category || category === "ALL") return true;
+    return set.category === category;
+  });
 
   return (
     <div className="p-4">

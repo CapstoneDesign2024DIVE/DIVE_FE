@@ -45,18 +45,16 @@ export default function QuestionItem({ question, isSelected, onClick }) {
             }`}
           >
             <div
-              className={`flex h-full items-center justify-end transition-opacity duration-200 ${
-                isSelected ? "opacity-100" : "opacity-0"
-              }`}
+              className={`absolute right-0 top-0 flex h-full transform items-center transition-transform duration-300 ease-in-out ${isSelected ? "translate-x-0" : "translate-x-full"}`}
             >
               <button
-                className="flex h-12 w-12 items-center justify-center bg-gray-200 text-gray-600 transition-colors hover:bg-gray-300"
+                className="flex h-full w-12 items-center justify-center bg-gray-100 text-gray-600 transition-colors hover:bg-gray-200"
                 onClick={handleEditClick}
               >
                 <FiEdit2 size={18} />
               </button>
               <button
-                className="flex h-12 w-12 items-center justify-center bg-red-200 text-red-600 transition-colors hover:bg-red-300"
+                className="flex h-full w-12 items-center justify-center bg-red-100 text-red-600 transition-colors hover:bg-red-200"
                 onClick={handleDeleteClick}
               >
                 <FiTrash2 size={18} />

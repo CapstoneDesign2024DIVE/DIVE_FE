@@ -179,9 +179,10 @@ export const useGetQuestionSets = (sortOrder) => {
   return useQuery({
     queryKey: ["questionSets", sortOrder],
     queryFn: async () => {
-      return mockQuestionSets;
+      return mockQuestionSets.filter((set) => set.open);
       // const response = await api.get("/questionSet/all", {
       //   params: { sort: sortOrder },
+      //   open: true
       // });
       // return response.data;
     },

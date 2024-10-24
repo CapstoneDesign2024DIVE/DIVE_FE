@@ -4,7 +4,7 @@ import { HiPlus } from "react-icons/hi";
 import { useState } from "react";
 import { getCategoryStyle } from "@utils/categoryStyles";
 import QuestionSetCard from "@components/MyPageQuestionSet/QuestionSetCard";
-import QuestionItem from "@components/MyPageQuestionSet/QuestionSetItem";
+import QuestionItem from "@components/MyPageQuestionSet/QuestionItem";
 import AddQuestionSetModal from "@components/MyPageQuestionSet/AddQuestionSetModal";
 import AddQuestionModal from "@components/MyPageQuestionSet/AddQuestionModal";
 import QuestionSetMenuModal from "@components/MyPageQuestionSet/QuestionSetMenuModal";
