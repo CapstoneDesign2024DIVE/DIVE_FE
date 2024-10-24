@@ -1,11 +1,30 @@
+import {
+  useUpdateQuestionSet,
+  useDeleteQuestionSet,
+} from "@hooks/useQuestionSet";
+
 export default function QuestionSetMenuModal({
   isOpen,
   onClose,
-  onEdit,
-  onDelete,
   onOverlayClick,
   set,
 }) {
+  const updateQuestionSet = useUpdateQuestionSet();
+  const deleteQuestionSet = useDeleteQuestionSet();
+
+  const handleEdit = () => {
+    updateQuestionSet.mutate({
+      setId: set.id,
+      questionSet: set,
+    });
+    onClose();
+  };
+
+  const handleDelete = () => {
+    deleteQuestionSet.mutate(set.id);
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -92,13 +111,13 @@ export default function QuestionSetMenuModal({
               취소
             </button>
             <button
-              onClick={onEdit}
+              onClick={handleEdit}
               className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600"
             >
               수정하기
             </button>
             <button
-              onClick={onDelete}
+              onClick={handleDelete}
               className="rounded-lg bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600"
             >
               삭제하기

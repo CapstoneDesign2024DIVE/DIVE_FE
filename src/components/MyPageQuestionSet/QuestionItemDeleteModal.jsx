@@ -1,9 +1,22 @@
+import { useDeleteQuestion } from "@hooks/useQuestionSet";
+
 export default function QuestionItemDeleteModal({
   isOpen,
   onClose,
   onOverlayClick,
-  onDelete,
+  setId,
+  questionId,
 }) {
+  const deleteQuestion = useDeleteQuestion();
+
+  const handleDelete = () => {
+    deleteQuestion.mutate({
+      setId,
+      id: questionId,
+    });
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -26,7 +39,7 @@ export default function QuestionItemDeleteModal({
             취소
           </button>
           <button
-            onClick={onDelete}
+            onClick={handleDelete}
             className="rounded-lg bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600"
           >
             삭제하기

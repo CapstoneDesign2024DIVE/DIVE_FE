@@ -5,8 +5,8 @@ import { useState } from "react";
 import { getCategoryStyle } from "@utils/categoryStyles";
 import QuestionSetCard from "@components/MyPageQuestionSet/QuestionSetCard";
 import QuestionItem from "@components/MyPageQuestionSet/QuestionItem";
-import AddQuestionSetModal from "@components/MyPageQuestionSet/AddQuestionSetModal";
-import AddQuestionModal from "@components/MyPageQuestionSet/AddQuestionModal";
+import QuestionSetAddModal from "@components/MyPageQuestionSet/QuestionSetAddModal";
+import QuestionItemAddModal from "@components/MyPageQuestionSet/QuestionItemAddModal";
 import QuestionSetMenuModal from "@components/MyPageQuestionSet/QuestionSetMenuModal";
 
 export default function MyQuestionSet() {
@@ -14,7 +14,8 @@ export default function MyQuestionSet() {
   const [selectedSetId, setSelectedSetId] = useState(null);
   const [selectedQuestionId, setSelectedQuestionId] = useState(null);
   const [isAddSetModalOpen, setIsAddSetModalOpen] = useState(false);
-  const [isAddQuestionModalOpen, setIsAddQuestionModalOpen] = useState(false);
+  const [isQuestionItemAddModalOpen, setIsQuestionItemAddModalOpen] =
+    useState(false);
   const [isSetMenuModalOpen, setIsSetMenuModalOpen] = useState(false);
   const [selectedMenuSetId, setSelectedMenuSetId] = useState(null);
 
@@ -133,7 +134,7 @@ export default function MyQuestionSet() {
                 </button>
                 <button
                   className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"
-                  onClick={() => setIsAddQuestionModalOpen(true)}
+                  onClick={() => setIsQuestionItemAddModalOpen(true)}
                 >
                   <HiPlus size={20} />
                 </button>
@@ -156,7 +157,7 @@ export default function MyQuestionSet() {
       </div>
 
       {isAddSetModalOpen && (
-        <AddQuestionSetModal
+        <QuestionSetAddModal
           isOpen={isAddSetModalOpen}
           onClose={() => setIsAddSetModalOpen(false)}
           onOverlayClick={(e) =>
@@ -165,12 +166,12 @@ export default function MyQuestionSet() {
         />
       )}
 
-      {isAddQuestionModalOpen && (
-        <AddQuestionModal
-          isOpen={isAddQuestionModalOpen}
-          onClose={() => setIsAddQuestionModalOpen(false)}
+      {isQuestionItemAddModalOpen && (
+        <QuestionItemAddModal
+          isOpen={isQuestionItemAddModalOpen}
+          onClose={() => setIsQuestionItemAddModalOpen(false)}
           onOverlayClick={(e) =>
-            handleOverlayClick(e, () => setIsAddQuestionModalOpen(false))
+            handleOverlayClick(e, () => setIsQuestionItemAddModalOpen(false))
           }
         />
       )}

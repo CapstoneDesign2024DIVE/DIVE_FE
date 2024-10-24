@@ -1,8 +1,24 @@
-export default function AddQuestionSetModal({
+import { useState } from "react";
+import { useCreateQuestionSet } from "@hooks/useQuestionSet";
+
+export default function QuestionSetAddModal({
   isOpen,
   onClose,
   onOverlayClick,
 }) {
+  const createQuestionSet = useCreateQuestionSet();
+  const [formData, setFormData] = useState({
+    category: "Frontend",
+    title: "",
+    description: "",
+    open: false,
+  });
+
+  const handleCreate = () => {
+    createQuestionSet.mutate(formData);
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -20,7 +36,13 @@ export default function AddQuestionSetModal({
         <div className="space-y-4">
           <div>
             <label className="mb-1.5 block font-medium">카테고리</label>
-            <select className="w-full rounded-lg border border-gray-200 p-2.5">
+            <select
+              className="w-full rounded-lg border border-gray-200 p-2.5"
+              value={formData.category}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, category: e.target.value }))
+              }
+            >
               <option value="Frontend">Frontend</option>
               <option value="Backend">Backend</option>
               <option value="Android">Android</option>
@@ -35,6 +57,10 @@ export default function AddQuestionSetModal({
               type="text"
               className="w-full rounded-lg border border-gray-200 p-2.5"
               placeholder="면접 세트 제목을 입력하세요"
+              value={formData.title}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, title: e.target.value }))
+              }
             />
           </div>
           <div>
@@ -42,11 +68,25 @@ export default function AddQuestionSetModal({
             <textarea
               className="h-24 w-full resize-none rounded-lg border border-gray-200 p-2.5"
               placeholder="면접 세트에 대한 설명을 입력하세요"
+              value={formData.description}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
+              }
             />
           </div>
           <div>
             <label className="relative inline-flex cursor-pointer items-center">
-              <input type="checkbox" className="peer sr-only" />
+              <input
+                type="checkbox"
+                className="peer sr-only"
+                checked={formData.open}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, open: e.target.checked }))
+                }
+              />
               <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-indigo-600 peer-checked:after:translate-x-full"></div>
               <span className="ml-3 font-medium">공개</span>
             </label>
@@ -59,7 +99,10 @@ export default function AddQuestionSetModal({
           >
             취소
           </button>
-          <button className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600">
+          <button
+            onClick={handleCreate}
+            className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600"
+          >
             만들기
           </button>
         </div>

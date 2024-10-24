@@ -1,10 +1,25 @@
+import { useState } from "react";
+import { useUpdateQuestion } from "@hooks/useQuestionSet";
+
 export default function QuestionItemEditModal({
   isOpen,
   onClose,
   onOverlayClick,
-  onEdit,
+  setId,
   question,
 }) {
+  const updateQuestion = useUpdateQuestion();
+  const [contents, setContents] = useState(question?.contents || "");
+
+  const handleEdit = () => {
+    updateQuestion.mutate({
+      setId,
+      id: question.id,
+      question: { contents },
+    });
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -25,7 +40,8 @@ export default function QuestionItemEditModal({
               <textarea
                 className="h-32 w-full resize-none rounded-lg border border-gray-200 p-2.5"
                 placeholder="면접 질문을 입력하세요"
-                defaultValue={question.contents}
+                value={contents}
+                onChange={(e) => setContents(e.target.value)}
               />
             </div>
           </div>
@@ -39,7 +55,7 @@ export default function QuestionItemEditModal({
               취소
             </button>
             <button
-              onClick={onEdit}
+              onClick={handleEdit}
               className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600"
             >
               수정하기

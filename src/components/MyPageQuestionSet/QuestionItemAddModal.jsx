@@ -1,4 +1,23 @@
-export default function AddQuestionModal({ isOpen, onClose, onOverlayClick }) {
+import { useState } from "react";
+import { useCreateQuestion } from "@hooks/useQuestionSet";
+
+export default function QuestionItemAddModal({
+  isOpen,
+  onClose,
+  onOverlayClick,
+  setId,
+}) {
+  const createQuestion = useCreateQuestion();
+  const [contents, setContents] = useState("");
+
+  const handleCreate = () => {
+    createQuestion.mutate({
+      setId,
+      question: { contents },
+    });
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -18,6 +37,8 @@ export default function AddQuestionModal({ isOpen, onClose, onOverlayClick }) {
           <textarea
             className="h-32 w-full resize-none rounded-lg border border-gray-200 p-2.5"
             placeholder="면접 질문을 입력하세요"
+            value={contents}
+            onChange={(e) => setContents(e.target.value)}
           />
         </div>
         <div className="mt-6 flex justify-end gap-2">
@@ -27,7 +48,10 @@ export default function AddQuestionModal({ isOpen, onClose, onOverlayClick }) {
           >
             취소
           </button>
-          <button className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600">
+          <button
+            onClick={handleCreate}
+            className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600"
+          >
             추가하기
           </button>
         </div>
