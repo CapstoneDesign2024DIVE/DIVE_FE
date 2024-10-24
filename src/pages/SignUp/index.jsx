@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signUp, login } from "@apis/userAPI";
+import { useSignUp, useLogin } from "@hooks/useUser";
 
 export default function SignUpPage() {
   const navigate = useNavigate();
-  const signUpMutation = signUp();
-  const loginMutation = login();
+  const signUpMutation = useSignUp();
+  const loginMutation = useLogin();
 
   const [formData, setFormData] = useState({
     username: "",

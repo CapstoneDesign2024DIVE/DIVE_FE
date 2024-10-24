@@ -1,4 +1,4 @@
-import { useGetMyQuestionSets } from "@apis/questionSetAPI";
+import { useGetMyQuestionSets } from "@hooks/useQuestionSet";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { HiPlus } from "react-icons/hi";
 import { useState } from "react";

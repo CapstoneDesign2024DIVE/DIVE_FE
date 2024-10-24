@@ -1,25 +1,6 @@
-export default function NotificationModal({ onClick }) {
-  const notifications = [
-    {
-      id: 1,
-      type: "comment",
-      content: "새로운 댓글이 달렸습니다.",
-      time: "5분 전",
-    },
-    {
-      id: 2,
-      type: "like",
-      content: "귀하의 게시물에 좋아요가 달렸습니다.",
-      time: "30분 전",
-    },
-    {
-      id: 3,
-      type: "mention",
-      content: "누군가가 귀하를 언급했습니다.",
-      time: "1시간 전",
-    },
-  ];
+import { mockNotification } from "@mocks/notificationMock";
 
+export default function NotificationModal({ onClick }) {
   return (
     <div
       className="absolute right-0 z-10 mt-2 w-80 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
@@ -29,7 +10,7 @@ export default function NotificationModal({ onClick }) {
         <h3 className="font-bold text-lg">알림</h3>
       </div>
       <div className="max-h-96 overflow-y-auto">
-        {notifications.map((notification) => (
+        {mockNotification.map((notification) => (
           <div
             key={notification.id}
             className="cursor-pointer px-4 py-3 font-medium hover:bg-gray-50"

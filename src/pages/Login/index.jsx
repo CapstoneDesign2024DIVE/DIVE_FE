@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { login, socialLogin } from "@apis/userAPI";
+import { useLogin, useSocialLogin } from "@hooks/useUser";
 import naverLogo from "@assets/icons/naver.svg";
 import kakaoLogo from "@assets/icons/kakao.svg";
 
@@ -11,8 +11,8 @@ const FRONTEND_URL = import.meta.env.VITE_FRONTEND_URL;
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const loginMutation = login();
-  const socialLoginMutation = socialLogin();
+  const loginMutation = useLogin();
+  const socialLoginMutation = useSocialLogin();
   const [formData, setFormData] = useState({
     username: "",
     password: "",

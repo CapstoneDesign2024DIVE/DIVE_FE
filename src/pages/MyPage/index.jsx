@@ -1,4 +1,4 @@
-import { useGetUserInfo } from "@apis/userAPI";
+import { useGetUserInfo } from "@hooks/useUser";
 
 export default function MyPage() {
   const { data: user, isLoading } = useGetUserInfo();
