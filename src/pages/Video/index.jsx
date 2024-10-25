@@ -9,19 +9,9 @@ export default function VideoPage() {
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
   const videoSortOrder = useSortStore((state) => state.videoSortOrder);
-  const { data: videos, isLoading } = useGetVideos(videoSortOrder);
+  const { data: videos = [] } = useGetVideos(videoSortOrder);
 
-  if (isLoading) {
-    return (
-      <div className="p-4">
-        <div className="flex h-[50vh] items-center justify-center">
-          <div>Loading...</div>
-        </div>
-      </div>
-    );
-  }
-
-  const filteredVideos = videos?.filter((video) => {
+  const filteredVideos = videos.filter((video) => {
     if (!category || category === "ALL") return true;
     return video.category === category;
   });
@@ -44,7 +34,7 @@ export default function VideoPage() {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filteredVideos?.map((video) => (
+        {filteredVideos.map((video) => (
           <Video key={video.id} {...video} />
         ))}
       </div>
