@@ -1,14 +1,22 @@
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "@store/authStore";
+import useNavbarStore from "@store/navbarStore";
 
 export default function UserModal() {
   const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
+  const resetOpenMenuItem = useNavbarStore((state) => state.resetOpenMenuItem);
 
   const handleLogout = () => {
     logout();
+    resetOpenMenuItem();
     navigate("/");
+  };
+
+  const handleNavigation = (path) => {
+    resetOpenMenuItem();
+    navigate(path);
   };
 
   return (
@@ -17,18 +25,21 @@ export default function UserModal() {
         <Link
           to="/myPage"
           className="block w-full px-4 py-2 text-center hover:bg-gray-100"
+          onClick={() => handleNavigation("/myPage")}
         >
           내 정보
         </Link>
         <Link
           to="/myPage/video"
           className="block w-full px-4 py-2 text-center hover:bg-gray-100"
+          onClick={() => handleNavigation("/myPage/video")}
         >
           내 영상
         </Link>
         <Link
           to="/myPage/questionSet"
           className="block w-full px-4 py-2 text-center hover:bg-gray-100"
+          onClick={() => handleNavigation("/myPage/questionSet")}
         >
           내 면접 세트
         </Link>

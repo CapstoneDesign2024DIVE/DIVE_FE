@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import MenuItem from "./MenuItem";
+import useNavbarStore from "@store/navbarStore";
 
 export default function Navbar() {
-  const [openMenuItem, setOpenMenuItem] = useState(null);
   const navigate = useNavigate();
+  const { openMenuItem, setOpenMenuItem } = useNavbarStore();
 
   const interviewVideos = [
     "ALL",
@@ -26,7 +26,7 @@ export default function Navbar() {
   ];
 
   const handleMenuClick = (index, path) => {
-    setOpenMenuItem((prevOpen) => (prevOpen === index ? null : index));
+    setOpenMenuItem(openMenuItem === index ? null : index);
     navigate(path);
   };
 
