@@ -2,10 +2,21 @@ import { useState, useEffect, useRef } from "react";
 import { FaClock, FaCalendarPlus, FaFire } from "react-icons/fa";
 import useSortStore from "@store/store";
 
-export default function SortButton({ className }) {
-  const { sortOrder, setSortOrder } = useSortStore();
+export default function SortButton({ className, type = "questionSet" }) {
+  const {
+    questionSetSortOrder,
+    videoSortOrder,
+    setQuestionSetSortOrder,
+    setVideoSortOrder,
+  } = useSortStore();
+
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const sortOrder =
+    type === "questionSet" ? questionSetSortOrder : videoSortOrder;
+  const setSortOrder =
+    type === "questionSet" ? setQuestionSetSortOrder : setVideoSortOrder;
 
   const options = [
     { label: "최신순", icon: FaClock, value: 0 },

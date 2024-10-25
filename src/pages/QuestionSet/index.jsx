@@ -8,8 +8,11 @@ import { getCategoryStyle } from "@utils/categoryStyles";
 export default function QuestionSetPage() {
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
-  const sortOrder = useSortStore((state) => state.sortOrder);
-  const { data: questionSets, isLoading } = useGetQuestionSets(sortOrder);
+  const questionSetSortOrder = useSortStore(
+    (state) => state.questionSetSortOrder,
+  );
+  const { data: questionSets, isLoading } =
+    useGetQuestionSets(questionSetSortOrder);
 
   if (isLoading) {
     return (
