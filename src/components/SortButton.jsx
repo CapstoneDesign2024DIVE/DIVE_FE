@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { FaClock, FaCalendarPlus, FaFire } from "react-icons/fa";
-import useSortStore from "@store/store";
+import useSortStore from "@store/sortStore";
 
 export default function SortButton({ className, type = "questionSet" }) {
   const {

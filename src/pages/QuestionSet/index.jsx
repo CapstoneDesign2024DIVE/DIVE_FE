@@ -1,7 +1,7 @@
 import QuestionSet from "@components/QuestionSet";
 import SortButton from "@components/SortButton";
 import { useGetQuestionSets } from "@hooks/useQuestionSet";
-import useSortStore from "@store/store";
+import useSortStore from "@store/sortStore";
 import { useSearchParams } from "react-router-dom";
 import { getCategoryStyle } from "@utils/categoryStyles";
 

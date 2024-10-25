@@ -1,7 +1,7 @@
 import Video from "@components/Video";
 import SortButton from "@components/SortButton";
 import { useGetVideos } from "@hooks/useVideo";
-import useSortStore from "@store/store";
+import useSortStore from "@store/sortStore";
 import { useSearchParams } from "react-router-dom";
 import { getCategoryStyle } from "@utils/categoryStyles";
 
