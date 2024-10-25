@@ -1,5 +1,14 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { getQuestionSets, getMyQuestionSets } from "@apis/questionSetAPI";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  getQuestionSets,
+  getMyQuestionSets,
+  createQuestionSet,
+  updateQuestionSet,
+  deleteQuestionSet,
+  createQuestion,
+  updateQuestion,
+  deleteQuestion,
+} from "@apis/questionSetAPI";
 import { mockQuestionSets } from "@mocks/questionSetMock";
 
 export const useGetQuestionSets = (sortOrder) => {
@@ -32,17 +41,31 @@ export const useGetMyQuestionSets = () => {
     queryKey: ["myQuestionSets"],
     queryFn: async () => {
       return mockQuestionSets.filter((set) => set.username === "testuser");
-      // return getMyQuestionSets();
+      // getMyQuestionSets();
     },
   });
 };
 
 export const useCreateQuestionSet = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (questionSet) => {
       alert("질문세트 생성 요청이 전송되었습니다.");
       return { success: true };
+      //createQuestionSet(questionSet);
     },
+    // onSuccess: (newQuestionSet) => {
+    //   queryClient.setQueryData(["myQuestionSets"], (oldData) => {
+    //     return oldData ? [...oldData, newQuestionSet] : [newQuestionSet];
+    //   });
+
+    //   if (newQuestionSet.open) {
+    //     queryClient.setQueryData(["questionSets"], (oldData) => {
+    //       return oldData ? [...oldData, newQuestionSet] : [newQuestionSet];
+    //     });
+    //   }
+    // },
   });
 };
 
@@ -51,7 +74,17 @@ export const useUpdateQuestionSet = () => {
     mutationFn: async ({ setId, questionSet }) => {
       alert("질문세트 수정 요청이 전송되었습니다.");
       return { success: true };
+      // updateQuestionSet(setId, questionSet);
     },
+    // onSuccess: (updatedSet, { setId }) => {
+    //   queryClient.setQueryData(["myQuestionSets"], (oldData) => {
+    //     return oldData?.map((set) => (set.id === setId ? updatedSet : set));
+    //   });
+
+    //   queryClient.setQueryData(["questionSets"], (oldData) => {
+    //     return oldData?.map((set) => (set.id === setId ? updatedSet : set));
+    //   });
+    // },
   });
 };
 
@@ -60,17 +93,42 @@ export const useDeleteQuestionSet = () => {
     mutationFn: async (setId) => {
       alert("질문세트 삭제 요청이 전송되었습니다.");
       return { success: true };
+      // deleteQuestionSet(setId);
+    },
+    onSuccess: (_, deletedSetId) => {
+      queryClient.setQueryData(["myQuestionSets"], (oldData) => {
+        return oldData?.filter((set) => set.id !== deletedSetId);
+      });
+
+      queryClient.setQueryData(["questionSets"], (oldData) => {
+        return oldData?.filter((set) => set.id !== deletedSetId);
+      });
     },
   });
 };
 
-// 질문 관련 mutation hooks
 export const useCreateQuestion = () => {
   return useMutation({
     mutationFn: async ({ setId, question }) => {
       alert("질문 생성 요청이 전송되었습니다.");
       return { success: true };
+      // createQuestion(setId, question);
     },
+    // onSuccess: (newQuestion, { setId }) => {
+    //   ["myQuestionSets", "questionSets"].forEach((key) => {
+    //     queryClient.setQueryData([key], (oldData) => {
+    //       return oldData?.map((set) => {
+    //         if (set.id === setId) {
+    //           return {
+    //             ...set,
+    //             questions: [...set.questions, newQuestion],
+    //           };
+    //         }
+    //         return set;
+    //       });
+    //     });
+    //   });
+    // },
   });
 };
 
@@ -79,7 +137,25 @@ export const useUpdateQuestion = () => {
     mutationFn: async ({ setId, id, question }) => {
       alert("질문 수정 요청이 전송되었습니다.");
       return { success: true };
+      // updateQuestion(setId, id, question);
     },
+    // onSuccess: (updatedQuestion, { setId, id }) => {
+    //   ["myQuestionSets", "questionSets"].forEach((key) => {
+    //     queryClient.setQueryData([key], (oldData) => {
+    //       return oldData?.map((set) => {
+    //         if (set.id === setId) {
+    //           return {
+    //             ...set,
+    //             questions: set.questions.map((q) =>
+    //               q.id === id ? updatedQuestion : q,
+    //             ),
+    //           };
+    //         }
+    //         return set;
+    //       });
+    //     });
+    //   });
+    // },
   });
 };
 
@@ -88,6 +164,22 @@ export const useDeleteQuestion = () => {
     mutationFn: async ({ setId, id }) => {
       alert("질문 삭제 요청이 전송되었습니다.");
       return { success: true };
+      // deleteQuestion(setId, id);
     },
+    // onSuccess: (_, { setId, id }) => {
+    //   ["myQuestionSets", "questionSets"].forEach((key) => {
+    //     queryClient.setQueryData([key], (oldData) => {
+    //       return oldData?.map((set) => {
+    //         if (set.id === setId) {
+    //           return {
+    //             ...set,
+    //             questions: set.questions.filter((q) => q.id !== id),
+    //           };
+    //         }
+    //         return set;
+    //       });
+    //     });
+    //   });
+    // },
   });
 };
