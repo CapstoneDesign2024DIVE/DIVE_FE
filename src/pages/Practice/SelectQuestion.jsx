@@ -192,7 +192,7 @@ export default function SelectQuestionPage() {
               </div>
             )}
           </div>
-          <div className="flex justify-end border-t p-4">
+          <div className="my-2 flex justify-end border-t p-4">
             <button
               onClick={handleNext}
               disabled={!selectedSet || selectedQuestions.length === 0}
