@@ -1,7 +1,7 @@
-// src/mocks/videoMock.js
 export const mockVideos = [
   {
     id: 1,
+    userId: "user1",
     nickname: "테크러버",
     imgSrc: "https://i.pravatar.cc/150?img=1",
     thumbnail: "https://picsum.photos/seed/video1/300/200",
@@ -13,6 +13,7 @@ export const mockVideos = [
   },
   {
     id: 2,
+    userId: "user2",
     nickname: "백엔드장인",
     imgSrc: "https://i.pravatar.cc/150?img=2",
     thumbnail: "https://picsum.photos/seed/video2/300/200",
@@ -24,8 +25,9 @@ export const mockVideos = [
   },
   {
     id: 3,
-    nickname: "모바일개발자",
-    imgSrc: "https://i.pravatar.cc/150?img=3",
+    userId: "user1",
+    nickname: "테크러버",
+    imgSrc: "https://i.pravatar.cc/150?img=1",
     thumbnail: "https://picsum.photos/seed/video3/300/200",
     title: "안드로이드 개발자 면접 준비하기",
     category: "Android",
@@ -35,6 +37,7 @@ export const mockVideos = [
   },
   {
     id: 4,
+    userId: "user3",
     nickname: "iOS마스터",
     imgSrc: "https://i.pravatar.cc/150?img=4",
     thumbnail: "https://picsum.photos/seed/video4/300/200",
@@ -46,6 +49,7 @@ export const mockVideos = [
   },
   {
     id: 5,
+    userId: "user4",
     nickname: "데브옵스",
     imgSrc: "https://i.pravatar.cc/150?img=5",
     thumbnail: "https://picsum.photos/seed/video5/300/200",
@@ -57,8 +61,9 @@ export const mockVideos = [
   },
   {
     id: 6,
-    nickname: "프론트엔드러버",
-    imgSrc: "https://i.pravatar.cc/150?img=6",
+    userId: "user1",
+    nickname: "테크러버",
+    imgSrc: "https://i.pravatar.cc/150?img=1",
     thumbnail: "https://picsum.photos/seed/video6/300/200",
     title: "리액트 실전 면접 질문 10선",
     category: "Frontend",
@@ -68,6 +73,7 @@ export const mockVideos = [
   },
   {
     id: 7,
+    userId: "user5",
     nickname: "안드로이드고수",
     imgSrc: "https://i.pravatar.cc/150?img=7",
     thumbnail: "https://picsum.photos/seed/video7/300/200",
@@ -79,8 +85,9 @@ export const mockVideos = [
   },
   {
     id: 8,
-    nickname: "백엔드개발자",
-    imgSrc: "https://i.pravatar.cc/150?img=8",
+    userId: "user2",
+    nickname: "백엔드장인",
+    imgSrc: "https://i.pravatar.cc/150?img=2",
     thumbnail: "https://picsum.photos/seed/video8/300/200",
     title: "스프링 MSA 아키텍처 면접 준비",
     category: "Backend",
@@ -90,8 +97,9 @@ export const mockVideos = [
   },
   {
     id: 9,
-    nickname: "클라우드전문가",
-    imgSrc: "https://i.pravatar.cc/150?img=9",
+    userId: "user4",
+    nickname: "데브옵스",
+    imgSrc: "https://i.pravatar.cc/150?img=5",
     thumbnail: "https://picsum.photos/seed/video9/300/200",
     title: "AWS 클라우드 아키텍트 면접 준비",
     category: "DevOps",
@@ -101,8 +109,9 @@ export const mockVideos = [
   },
   {
     id: 10,
-    nickname: "프론트엔드개발자",
-    imgSrc: "https://i.pravatar.cc/150?img=10",
+    userId: "user1",
+    nickname: "테크러버",
+    imgSrc: "https://i.pravatar.cc/150?img=1",
     thumbnail: "https://picsum.photos/seed/video10/300/200",
     title: "Vue.js 개발자 면접 핵심 정리",
     category: "Frontend",
@@ -112,8 +121,9 @@ export const mockVideos = [
   },
   {
     id: 11,
-    nickname: "iOS개발자",
-    imgSrc: "https://i.pravatar.cc/150?img=11",
+    userId: "user3",
+    nickname: "iOS마스터",
+    imgSrc: "https://i.pravatar.cc/150?img=4",
     thumbnail: "https://picsum.photos/seed/video11/300/200",
     title: "Swift UI 면접 질문 모음",
     category: "iOS",
@@ -123,8 +133,9 @@ export const mockVideos = [
   },
   {
     id: 12,
-    nickname: "보안전문가",
-    imgSrc: "https://i.pravatar.cc/150?img=12",
+    userId: "user2",
+    nickname: "백엔드장인",
+    imgSrc: "https://i.pravatar.cc/150?img=2",
     thumbnail: "https://picsum.photos/seed/video12/300/200",
     title: "정보보안 기술면접 완벽 가이드",
     category: "Backend",
@@ -134,8 +145,9 @@ export const mockVideos = [
   },
   {
     id: 13,
-    nickname: "데이터분석가",
-    imgSrc: "https://i.pravatar.cc/150?img=13",
+    userId: "user2",
+    nickname: "백엔드장인",
+    imgSrc: "https://i.pravatar.cc/150?img=2",
     thumbnail: "https://picsum.photos/seed/video13/300/200",
     title: "데이터 사이언티스트 면접 준비",
     category: "Backend",
@@ -145,8 +157,9 @@ export const mockVideos = [
   },
   {
     id: 14,
-    nickname: "안드로이드전문가",
-    imgSrc: "https://i.pravatar.cc/150?img=14",
+    userId: "user5",
+    nickname: "안드로이드고수",
+    imgSrc: "https://i.pravatar.cc/150?img=7",
     thumbnail: "https://picsum.photos/seed/video14/300/200",
     title: "코틀린 안드로이드 면접 질문",
     category: "Android",
@@ -156,8 +169,9 @@ export const mockVideos = [
   },
   {
     id: 15,
-    nickname: "DevSecOps",
-    imgSrc: "https://i.pravatar.cc/150?img=15",
+    userId: "user4",
+    nickname: "데브옵스",
+    imgSrc: "https://i.pravatar.cc/150?img=5",
     thumbnail: "https://picsum.photos/seed/video15/300/200",
     title: "DevSecOps 엔지니어 면접 경험담",
     category: "DevOps",
