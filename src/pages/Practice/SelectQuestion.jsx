@@ -2,6 +2,7 @@ import { useGetMyQuestionSets } from "@hooks/useQuestionSet";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { HiPlus } from "react-icons/hi";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getCategoryStyle } from "@utils/categoryStyles";
 import QuestionSetCard from "@components/MyPageQuestionSet/QuestionSetCard";
 import QuestionSetAddModal from "@components/MyPageQuestionSet/QuestionSetAddModal";
@@ -9,7 +10,8 @@ import QuestionItemAddModal from "@components/MyPageQuestionSet/QuestionItemAddM
 import QuestionSetMenuModal from "@components/MyPageQuestionSet/QuestionSetMenuModal";
 import QuestionItem from "@components/MyPageQuestionSet/QuestionItem";
 
-export default function MyQuestionSet() {
+export default function SelectQuestionPage() {
+  const navigate = useNavigate();
   const { data: questionSets } = useGetMyQuestionSets();
   const [selectedSetId, setSelectedSetId] = useState(null);
   const [selectedQuestions, setSelectedQuestions] = useState([]);
@@ -70,12 +72,30 @@ export default function MyQuestionSet() {
     handleCloseMenu();
   };
 
+  const handleNext = () => {
+    if (!selectedSet || selectedQuestions.length === 0) {
+      alert("질문 세트와 최소 1개 이상의 질문을 선택해주세요.");
+      return;
+    }
+
+    const selectedQuestionDetails = selectedSet.questions.filter((q) =>
+      selectedQuestions.includes(q.id),
+    );
+
+    navigate("/setting", {
+      state: {
+        selectedSet,
+        selectedQuestions: selectedQuestionDetails,
+      },
+    });
+  };
+
   if (!questionSets) {
     return (
       <div className="flex h-[calc(100vh-48px)] w-full overflow-hidden">
         <div className="w-[calc((100vw-256px)*0.4)] flex-shrink-0">
           <div className="sticky top-0 z-10 flex items-center justify-between bg-white p-4">
-            <h2 className="font-bold text-2xl">내 면접 세트</h2>
+            <h2 className="font-bold text-2xl">면접 연습</h2>
             <button className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100">
               <HiPlus size={20} />
             </button>
@@ -106,7 +126,7 @@ export default function MyQuestionSet() {
       <div className="flex h-[calc(100vh-48px)] w-full overflow-hidden">
         <div className="w-[calc((100vw-256px)*0.4)] flex-shrink-0">
           <div className="sticky top-0 z-10 flex items-center justify-between bg-white p-4">
-            <h2 className="font-bold text-2xl">내 면접 세트</h2>
+            <h2 className="font-bold text-2xl">면접 질문 선택</h2>
             <button
               className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"
               onClick={() => setIsAddSetModalOpen(true)}
@@ -130,10 +150,12 @@ export default function MyQuestionSet() {
           </div>
         </div>
 
-        {selectedSet && (
-          <div className="flex w-[calc((100vw-256px)*0.6)] flex-1 flex-col overflow-hidden">
-            <div className="sticky top-0 z-10 flex items-center justify-between bg-white p-4">
-              <h2 className="font-bold text-2xl">{selectedSet.title}</h2>
+        <div className="flex w-[calc((100vw-256px)*0.6)] flex-1 flex-col overflow-hidden">
+          <div className="sticky top-0 z-10 flex items-center justify-between bg-white p-4">
+            <h2 className="font-bold text-2xl">
+              {selectedSet ? selectedSet.title : "선택된 질문 목록"}
+            </h2>
+            {selectedSet && (
               <div className="flex gap-1">
                 <button
                   className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"
@@ -148,8 +170,10 @@ export default function MyQuestionSet() {
                   <HiPlus size={20} />
                 </button>
               </div>
-            </div>
-            <div className="h-[calc(100vh-144px)] overflow-y-auto px-4">
+            )}
+          </div>
+          <div className="h-[calc(100vh-192px)] overflow-y-auto px-4">
+            {selectedSet ? (
               <div className="space-y-2">
                 {selectedSet.questions.map((question) => (
                   <QuestionItem
@@ -160,9 +184,28 @@ export default function MyQuestionSet() {
                   />
                 ))}
               </div>
-            </div>
+            ) : (
+              <div className="flex h-full items-center justify-center">
+                <p className="text-center font-medium text-gray-500">
+                  면접 질문 세트를 선택해주세요
+                </p>
+              </div>
+            )}
           </div>
-        )}
+          <div className="flex justify-end border-t p-4">
+            <button
+              onClick={handleNext}
+              disabled={!selectedSet || selectedQuestions.length === 0}
+              className={`rounded-lg px-4 py-2 text-white ${
+                selectedSet && selectedQuestions.length > 0
+                  ? "bg-blue-500 hover:bg-blue-600"
+                  : "cursor-not-allowed bg-gray-300"
+              }`}
+            >
+              다음
+            </button>
+          </div>
+        </div>
       </div>
 
       {isAddSetModalOpen && (

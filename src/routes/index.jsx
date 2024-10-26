@@ -10,7 +10,8 @@ import HomePage from "@pages/Home";
 import QuestionSetPage from "@pages/QuestionSet";
 import VideoPage from "@pages/Video";
 import ResumePage from "@pages/Resume";
-import PracticePage from "@pages/Practice";
+import SelectQuestionPage from "@pages/Practice/SelectQuestion";
+import SettingPage from "@pages/Practice/Setting";
 import MyPage from "@pages/MyPage";
 import MyVideo from "@pages/MyPage/Video";
 import MyQuestionSet from "@pages/MyPage/QuestionSet";
@@ -23,7 +24,8 @@ const routes = [
   { path: "/questionSets", element: <QuestionSetPage />, isPublic: false },
   { path: "/videos", element: <VideoPage />, isPublic: false },
   { path: "/resumes", element: <ResumePage />, isPublic: false },
-  { path: "/practice", element: <PracticePage />, isPublic: false },
+  { path: "/practice", element: <SelectQuestionPage />, isPublic: false },
+  { path: "/setting", element: <SettingPage />, isPublic: false },
   {
     path: "/myPage",
     element: <MyPage />,

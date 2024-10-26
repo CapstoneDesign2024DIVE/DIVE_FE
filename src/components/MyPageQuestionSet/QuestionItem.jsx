@@ -3,9 +3,15 @@ import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import QuestionItemEditModal from "./QuestionItemEditModal";
 import QuestionItemDeleteModal from "./QuestionItemDeleteModal";
 
-export default function QuestionItem({ question, isSelected, onClick }) {
+export default function QuestionItem({
+  question,
+  selectedQuestions,
+  onToggleSelect,
+}) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const isSelected = selectedQuestions.includes(question.id);
 
   const handleEditClick = (e) => {
     e.stopPropagation();
@@ -31,7 +37,7 @@ export default function QuestionItem({ question, isSelected, onClick }) {
             ? "border-indigo-500"
             : "border-gray-200 hover:border-gray-300"
         }`}
-        onClick={onClick}
+        onClick={() => onToggleSelect(question.id)}
       >
         <div className="relative flex w-full items-center">
           <div className="w-full p-3">
