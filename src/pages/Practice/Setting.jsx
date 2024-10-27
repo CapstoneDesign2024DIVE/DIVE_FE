@@ -141,7 +141,7 @@ export default function SettingPage() {
             </div>
           </div>
 
-          <div className="flex h-[calc(100vh-192px)] w-full items-center justify-center overflow-y-auto">
+          <div className="flex h-[calc(100vh-192px)] w-full items-center justify-center overflow-y-auto bg-gray-100">
             <div className="flex w-1/2 flex-col items-center space-y-6">
               <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-black shadow-xl">
                 {isLoading ? (
@@ -217,7 +217,7 @@ export default function SettingPage() {
             </div>
           </div>
 
-          <div className="my-2 flex justify-end border-t p-4">
+          <div className="flex justify-end border-t p-4">
             <button
               onClick={handleNext}
               disabled={!!error || isLoading}
