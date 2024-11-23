@@ -10,11 +10,22 @@ export default function QuestionItemDeleteModal({
   const deleteQuestion = useDeleteQuestion();
 
   const handleDelete = () => {
-    deleteQuestion.mutate({
-      setId,
-      id: questionId,
-    });
-    onClose();
+    if (!setId || !questionId) return;
+
+    deleteQuestion.mutate(
+      {
+        setId,
+        id: questionId,
+      },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+        onError: (error) => {
+          console.error("Failed to delete question:", error);
+        },
+      },
+    );
   };
 
   if (!isOpen) return null;
@@ -35,14 +46,16 @@ export default function QuestionItemDeleteModal({
           <button
             onClick={onClose}
             className="rounded-lg px-4 py-2 font-medium text-gray-500 hover:bg-gray-100"
+            disabled={deleteQuestion.isPending}
           >
             취소
           </button>
           <button
             onClick={handleDelete}
-            className="rounded-lg bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600"
+            className="rounded-lg bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600 disabled:opacity-50"
+            disabled={deleteQuestion.isPending}
           >
-            삭제하기
+            {deleteQuestion.isPending ? "삭제 중..." : "삭제하기"}
           </button>
         </div>
       </div>

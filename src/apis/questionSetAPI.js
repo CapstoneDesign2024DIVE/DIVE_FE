@@ -38,18 +38,29 @@ export const deleteQuestionSet = async (setId) => {
   const response = await api.delete(`/questionSet/${setId}/delete`);
   return response.data;
 };
-
-export const createQuestion = async (setId, question) => {
-  const response = await api.post(`/question/create/${setId}`, question);
+export const createQuestion = async (setId, { contents }) => {
+  const response = await api.post(`/question/${setId}/create`, null, {
+    params: {
+      contents,
+    },
+  });
   return response.data;
 };
 
-export const updateQuestion = async (setId, id, question) => {
-  const response = await api.put(`/question/${setId}/${id}/update`, question);
+export const updateQuestion = async (setId, id, { contents }) => {
+  const response = await api.put(`/question/${setId}/${id}/update`, null, {
+    params: {
+      setId,
+      id,
+      contents,
+    },
+  });
   return response.data;
 };
 
 export const deleteQuestion = async (setId, id) => {
-  const response = await api.delete(`/question/${setId}/${id}/delete`);
+  const response = await api.delete(`/question/${setId}/delete`, {
+    data: { id },
+  });
   return response.data;
 };

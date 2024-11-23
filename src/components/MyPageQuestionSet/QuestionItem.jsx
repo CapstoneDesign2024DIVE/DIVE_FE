@@ -4,6 +4,7 @@ import QuestionItemEditModal from "./QuestionItemEditModal";
 import QuestionItemDeleteModal from "./QuestionItemDeleteModal";
 
 export default function QuestionItem({
+  setId,
   question,
   selectedQuestions,
   onToggleSelect,
@@ -77,10 +78,7 @@ export default function QuestionItem({
           onOverlayClick={(e) =>
             handleOverlayClick(e, () => setIsEditModalOpen(false))
           }
-          onEdit={() => {
-            // 수정 로직
-            setIsEditModalOpen(false);
-          }}
+          setId={setId}
           question={question}
         />
       )}
@@ -92,10 +90,8 @@ export default function QuestionItem({
           onOverlayClick={(e) =>
             handleOverlayClick(e, () => setIsDeleteModalOpen(false))
           }
-          onDelete={() => {
-            // 삭제 로직
-            setIsDeleteModalOpen(false);
-          }}
+          setId={setId}
+          questionId={question.id}
         />
       )}
     </>

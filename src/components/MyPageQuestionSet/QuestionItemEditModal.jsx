@@ -12,12 +12,23 @@ export default function QuestionItemEditModal({
   const [contents, setContents] = useState(question?.contents || "");
 
   const handleEdit = () => {
-    updateQuestion.mutate({
-      setId,
-      id: question.id,
-      question: { contents },
-    });
-    onClose();
+    if (!contents.trim()) return;
+
+    updateQuestion.mutate(
+      {
+        setId,
+        id: question.id,
+        contents: contents.trim(),
+      },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+        onError: (error) => {
+          console.error("Failed to update question:", error);
+        },
+      },
+    );
   };
 
   if (!isOpen) return null;
@@ -28,39 +39,36 @@ export default function QuestionItemEditModal({
       onClick={onOverlayClick}
     >
       <div
-        className="flex max-h-[80vh] w-[500px] flex-col overflow-hidden rounded-lg border border-gray-200 bg-white p-6 shadow-md"
+        className="w-[500px] rounded-lg border border-gray-200 bg-white p-6 shadow-md"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-6">
           <h2 className="font-bold text-xl">질문 수정</h2>
         </div>
-        <div className="flex-1 overflow-y-auto">
-          <div className="space-y-4">
-            <div>
-              <textarea
-                className="h-32 w-full resize-none rounded-lg border border-gray-200 p-2.5"
-                placeholder="면접 질문을 입력하세요"
-                value={contents}
-                onChange={(e) => setContents(e.target.value)}
-              />
-            </div>
-          </div>
+        <div>
+          <label className="mb-1.5 block font-medium">질문 내용</label>
+          <textarea
+            className="h-32 w-full resize-none rounded-lg border border-gray-200 p-2.5"
+            placeholder="면접 질문을 입력하세요"
+            value={contents}
+            onChange={(e) => setContents(e.target.value)}
+          />
         </div>
-        <div className="mt-6 flex justify-end border-t border-gray-200 pt-4">
-          <div className="flex gap-2">
-            <button
-              onClick={onClose}
-              className="rounded-lg px-4 py-2 font-medium text-gray-500 hover:bg-gray-100"
-            >
-              취소
-            </button>
-            <button
-              onClick={handleEdit}
-              className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600"
-            >
-              수정하기
-            </button>
-          </div>
+        <div className="mt-6 flex justify-end gap-2">
+          <button
+            onClick={onClose}
+            className="rounded-lg px-4 py-2 font-medium text-gray-500 hover:bg-gray-100"
+            disabled={updateQuestion.isPending}
+          >
+            취소
+          </button>
+          <button
+            onClick={handleEdit}
+            className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600 disabled:opacity-50"
+            disabled={updateQuestion.isPending || !contents.trim()}
+          >
+            {updateQuestion.isPending ? "수정 중..." : "수정하기"}
+          </button>
         </div>
       </div>
     </div>

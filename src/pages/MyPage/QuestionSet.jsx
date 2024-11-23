@@ -154,6 +154,7 @@ export default function MyQuestionSet() {
                 {selectedSet.questions.map((question) => (
                   <QuestionItem
                     key={question.id}
+                    setId={selectedSet.id}
                     question={question}
                     selectedQuestions={selectedQuestions}
                     onToggleSelect={handleQuestionToggle}
@@ -175,13 +176,14 @@ export default function MyQuestionSet() {
         />
       )}
 
-      {isQuestionItemAddModalOpen && (
+      {isQuestionItemAddModalOpen && selectedSetId && (
         <QuestionItemAddModal
           isOpen={isQuestionItemAddModalOpen}
           onClose={() => setIsQuestionItemAddModalOpen(false)}
           onOverlayClick={(e) =>
             handleOverlayClick(e, () => setIsQuestionItemAddModalOpen(false))
           }
+          setId={selectedSetId}
         />
       )}
 

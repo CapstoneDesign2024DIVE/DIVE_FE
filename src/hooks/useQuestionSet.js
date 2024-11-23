@@ -93,7 +93,7 @@ export const useCreateQuestion = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ setId, question }) => createQuestion(setId, question),
+    mutationFn: ({ setId, contents }) => createQuestion(setId, { contents }),
     onSuccess: (newQuestion, { setId }) => {
       queryClient.setQueryData(["myQuestionSets"], (oldData) => {
         return oldData?.map((set) => {
@@ -114,8 +114,8 @@ export const useUpdateQuestion = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ setId, id, question }) =>
-      updateQuestion(setId, id, question),
+    mutationFn: ({ setId, id, contents }) =>
+      updateQuestion(setId, id, { contents }),
     onSuccess: (updatedQuestion, { setId, id }) => {
       queryClient.setQueryData(["myQuestionSets"], (oldData) => {
         return oldData?.map((set) => {
