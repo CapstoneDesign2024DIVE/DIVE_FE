@@ -58,9 +58,9 @@ export const updateQuestion = async (setId, id, { contents }) => {
   return response.data;
 };
 
-export const deleteQuestion = async (setId, id) => {
+export const deleteQuestion = async (setId, ids) => {
   const response = await api.delete(`/question/${setId}/delete`, {
-    data: { id },
+    data: [ids],
   });
   return response.data;
 };

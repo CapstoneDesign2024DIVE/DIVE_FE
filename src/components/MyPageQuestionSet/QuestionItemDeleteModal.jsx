@@ -15,7 +15,7 @@ export default function QuestionItemDeleteModal({
     deleteQuestion.mutate(
       {
         setId,
-        id: questionId,
+        id: questionId, // 배열로 감싸서 전송됨
       },
       {
         onSuccess: () => {
