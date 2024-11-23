@@ -63,12 +63,10 @@ export default function SelectQuestionPage() {
   };
 
   const handleEditSet = () => {
-    console.log("Edit set:", selectedMenuSet);
     handleCloseMenu();
   };
 
   const handleDeleteSet = () => {
-    console.log("Delete set:", selectedMenuSet);
     handleCloseMenu();
   };
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FaLayerGroup } from "react-icons/fa";
 import { LuCheck } from "react-icons/lu";
 import { getCategoryStyle } from "@utils/categoryStyles";
@@ -7,6 +7,7 @@ import QuestionModal from "@components/QuestionModal";
 
 export default function QuestionSetDetailPage() {
   const { state } = useLocation();
+  const navigate = useNavigate();
   const questionSet = state?.questionSet;
   const [selectedQuestions, setSelectedQuestions] = useState([]);
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
@@ -31,6 +32,24 @@ export default function QuestionSetDetailPage() {
     } else {
       setSelectedQuestions(questionSet.questions.map((q) => q.id));
     }
+  };
+
+  const handleStartInterview = () => {
+    if (!questionSet || selectedQuestions.length === 0) {
+      alert("최소 1개 이상의 질문을 선택해주세요.");
+      return;
+    }
+
+    const selectedQuestionDetails = questionSet.questions.filter((q) =>
+      selectedQuestions.includes(q.id),
+    );
+
+    navigate("/setting", {
+      state: {
+        selectedSet: questionSet,
+        selectedQuestions: selectedQuestionDetails,
+      },
+    });
   };
 
   const isAnyQuestionSelected = selectedQuestions.length > 0;
@@ -93,11 +112,7 @@ export default function QuestionSetDetailPage() {
                     ? "bg-indigo-500 hover:bg-indigo-600"
                     : "cursor-not-allowed bg-gray-300"
                 }`}
-                onClick={() => {
-                  if (isAnyQuestionSelected) {
-                    console.log("면접 시작하기");
-                  }
-                }}
+                onClick={handleStartInterview}
                 disabled={!isAnyQuestionSelected}
               >
                 면접 시작하기
