@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   useUpdateQuestionSet,
   useDeleteQuestionSet,
@@ -12,10 +13,17 @@ export default function QuestionSetMenuModal({
   const updateQuestionSet = useUpdateQuestionSet();
   const deleteQuestionSet = useDeleteQuestionSet();
 
+  const [formData, setFormData] = useState({
+    title: set.title,
+    description: set.description,
+    category: set.category,
+    isOpen: set.open || set.isOpen,
+  });
+
   const handleEdit = () => {
     updateQuestionSet.mutate({
       setId: set.id,
-      questionSet: set,
+      questionSet: formData,
     });
     onClose();
   };
@@ -45,7 +53,10 @@ export default function QuestionSetMenuModal({
               <label className="mb-1.5 block font-medium">카테고리</label>
               <select
                 className="w-full rounded-lg border border-gray-200 p-2.5"
-                value={set.category}
+                value={formData.category}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, category: e.target.value }))
+                }
               >
                 <option value="Frontend">Frontend</option>
                 <option value="Backend">Backend</option>
@@ -61,7 +72,10 @@ export default function QuestionSetMenuModal({
                 type="text"
                 className="w-full rounded-lg border border-gray-200 p-2.5"
                 placeholder="면접 세트 제목을 입력하세요"
-                value={set.title}
+                value={formData.title}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, title: e.target.value }))
+                }
               />
             </div>
             <div>
@@ -69,7 +83,13 @@ export default function QuestionSetMenuModal({
               <textarea
                 className="h-24 w-full resize-none rounded-lg border border-gray-200 p-2.5"
                 placeholder="면접 세트에 대한 설명을 입력하세요"
-                value={set.description}
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
               />
             </div>
             <div>
@@ -77,7 +97,13 @@ export default function QuestionSetMenuModal({
                 <input
                   type="checkbox"
                   className="peer sr-only"
-                  checked={set.open}
+                  checked={formData.isOpen}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      isOpen: e.target.checked,
+                    }))
+                  }
                 />
                 <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-indigo-600 peer-checked:after:translate-x-full"></div>
                 <span className="ml-3 font-medium">공개</span>
@@ -107,20 +133,25 @@ export default function QuestionSetMenuModal({
             <button
               onClick={onClose}
               className="rounded-lg px-4 py-2 font-medium text-gray-500 hover:bg-gray-100"
+              disabled={updateQuestionSet.isPending}
             >
               취소
             </button>
             <button
               onClick={handleEdit}
-              className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600"
+              className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600 disabled:opacity-50"
+              disabled={updateQuestionSet.isPending}
             >
-              수정하기
+              {updateQuestionSet.isPending ? "수정 중..." : "수정하기"}
             </button>
             <button
               onClick={handleDelete}
-              className="rounded-lg bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600"
+              className="rounded-lg bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600 disabled:opacity-50"
+              disabled={
+                updateQuestionSet.isPending || deleteQuestionSet.isPending
+              }
             >
-              삭제하기
+              {deleteQuestionSet.isPending ? "삭제 중..." : "삭제하기"}
             </button>
           </div>
         </div>
