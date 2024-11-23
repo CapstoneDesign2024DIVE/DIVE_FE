@@ -15,6 +15,7 @@ import SettingPage from "@pages/Practice/Setting";
 import MyPage from "@pages/MyPage";
 import MyVideo from "@pages/MyPage/Video";
 import MyQuestionSet from "@pages/MyPage/QuestionSet";
+import QuestionSetDetailPage from "@pages/QuestionSet/QuestionSetDetailPage";
 
 const routes = [
   { path: "/", element: <LandingPage />, isPublic: true },
@@ -39,6 +40,11 @@ const routes = [
   {
     path: "/myPage/questionSet",
     element: <MyQuestionSet />,
+    isPublic: false,
+  },
+  {
+    path: "/questionSets/:id",
+    element: <QuestionSetDetailPage />,
     isPublic: false,
   },
 ];

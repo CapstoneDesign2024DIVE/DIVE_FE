@@ -8,11 +8,28 @@ export default function QuestionSet({
   refCount,
   title,
   description,
+  category,
+  questions,
+  open,
 }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/questionSets/${id}`);
+    navigate(`/questionSets/${id}`, {
+      state: {
+        questionSet: {
+          id,
+          imageUrl,
+          nickname,
+          refCount,
+          title,
+          description,
+          category,
+          questions,
+          open,
+        },
+      },
+    });
   };
 
   return (
