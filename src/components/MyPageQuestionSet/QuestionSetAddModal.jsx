@@ -15,8 +15,15 @@ export default function QuestionSetAddModal({
   });
 
   const handleCreate = () => {
-    createQuestionSet.mutate(formData);
-    onClose();
+    createQuestionSet.mutate(formData, {
+      onSuccess: () => {
+        onClose(); // 성공 시에만 모달 닫기
+      },
+      onError: (error) => {
+        console.error("Failed to create question set:", error);
+        // 에러 처리 (예: 알림 표시)
+      },
+    });
   };
 
   if (!isOpen) return null;
@@ -96,14 +103,16 @@ export default function QuestionSetAddModal({
           <button
             onClick={onClose}
             className="rounded-lg px-4 py-2 font-medium text-gray-500 hover:bg-gray-100"
+            disabled={createQuestionSet.isPending}
           >
             취소
           </button>
           <button
             onClick={handleCreate}
-            className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600"
+            className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600 disabled:opacity-50"
+            disabled={createQuestionSet.isPending}
           >
-            만들기
+            {createQuestionSet.isPending ? "생성 중..." : "만들기"}
           </button>
         </div>
       </div>

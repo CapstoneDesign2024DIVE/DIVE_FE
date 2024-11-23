@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useLogin, useSocialLogin } from "@hooks/useUser";
+import { useLogin } from "@hooks/useUser";
 import naverLogo from "@assets/icons/naver.svg";
 import kakaoLogo from "@assets/icons/kakao.svg";
 
@@ -12,7 +12,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const loginMutation = useLogin();
-  const socialLoginMutation = useSocialLogin();
+  // const socialLoginMutation = useSocialLogin();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -52,19 +52,19 @@ export default function LoginPage() {
   };
 
   const handleSocialLogin = async (code, provider) => {
-    try {
-      const response = await socialLoginMutation.mutateAsync({
-        code,
-        provider,
-      });
-      if (response.accessToken) {
-        navigate("/home");
-      } else {
-        console.error("소셜 로그인 실패: 토큰을 받지 못했습니다");
-      }
-    } catch (error) {
-      console.error("소셜 로그인 실패:", error);
-    }
+    // try {
+    //   const response = await socialLoginMutation.mutateAsync({
+    //     code,
+    //     provider,
+    //   });
+    //   if (response.accessToken) {
+    //     navigate("/home");
+    //   } else {
+    //     console.error("소셜 로그인 실패: 토큰을 받지 못했습니다");
+    //   }
+    // } catch (error) {
+    //   console.error("소셜 로그인 실패:", error);
+    // }
   };
 
   const kakaoLoginUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${FRONTEND_URL}/login/oauth2/code/kakao`;

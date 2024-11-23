@@ -1,4 +1,4 @@
-import api from "@utils/axios";
+import api from "./axios";
 
 export const getQuestionSets = async (sortOrder) => {
   const response = await api.get("/questionSet/all", {
@@ -12,8 +12,20 @@ export const getMyQuestionSets = async () => {
   return response.data;
 };
 
-export const createQuestionSet = async (questionSet) => {
-  const response = await api.post("/questionSet/create", questionSet);
+export const createQuestionSet = async ({
+  title,
+  category,
+  description,
+  open,
+}) => {
+  const response = await api.post("/questionSet/create", null, {
+    params: {
+      title,
+      category,
+      description,
+      open,
+    },
+  });
   return response.data;
 };
 
