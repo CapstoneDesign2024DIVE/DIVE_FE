@@ -1,4 +1,4 @@
-import { useDeleteQuestion } from "@hooks/useQuestionSet";
+import { useDeleteQuestion } from "@hooks/useQuestion";
 
 export default function QuestionItemDeleteModal({
   isOpen,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useCreateQuestion } from "@hooks/useQuestionSet";
+import { useCreateQuestion } from "@hooks/useQuestion";
 
 export default function QuestionItemAddModal({
   isOpen,

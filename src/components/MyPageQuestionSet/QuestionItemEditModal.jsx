@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useUpdateQuestion } from "@hooks/useQuestionSet";
+import { useUpdateQuestion } from "@hooks/useQuestion";
 
 export default function QuestionItemEditModal({
   isOpen,
