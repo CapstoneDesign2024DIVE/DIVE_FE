@@ -5,6 +5,8 @@ import {
   createQuestionSet,
   updateQuestionSet,
   deleteQuestionSet,
+  bringQuestions,
+  bringQuestionSet,
 } from "@apis/questionSet";
 
 export const useGetQuestionSets = (sortOrder) => {
@@ -82,6 +84,30 @@ export const useDeleteQuestionSet = () => {
       queryClient.setQueryData(["myQuestionSets"], (oldData) => {
         return oldData?.filter((set) => set.id !== deletedSetId);
       });
+    },
+  });
+};
+
+export const useBringQuestions = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ fromId, questionIds, toIds }) =>
+      bringQuestions(fromId, { questionIds, toIds }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["myQuestionSets"]);
+    },
+  });
+};
+
+export const useBringQuestionSet = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ fromId, selectedQuestionIds }) =>
+      bringQuestionSet(fromId, selectedQuestionIds),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["myQuestionSets"]);
     },
   });
 };

@@ -3,11 +3,19 @@ import { useLocation } from "react-router-dom";
 import { FaLayerGroup } from "react-icons/fa";
 import { LuCheck } from "react-icons/lu";
 import { getCategoryStyle } from "@utils/categoryStyles";
+import QuestionModal from "@components/QuestionModal";
 
 export default function QuestionSetDetailPage() {
   const { state } = useLocation();
   const questionSet = state?.questionSet;
   const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
+
+  const handleOverlayClick = (e, closeModal) => {
+    if (e.target === e.currentTarget) {
+      closeModal();
+    }
+  };
 
   const handleQuestionClick = (questionId) => {
     setSelectedQuestions((prev) =>
@@ -48,7 +56,7 @@ export default function QuestionSetDetailPage() {
               </span>
             </div>
           </div>
-          <div className="mb-2 flex items-center gap-4">
+          <div className="mx-2 mb-2 flex items-center gap-4">
             <h1 className="font-bold text-2xl">{questionSet.title}</h1>
             <span
               className={`rounded-md px-3 py-1 font-medium text-sm ${getCategoryStyle(
@@ -59,7 +67,7 @@ export default function QuestionSetDetailPage() {
             </span>
           </div>
 
-          <p className="whitespace-pre-wrap rounded-lg font-medium text-gray-500">
+          <p className="mx-2 whitespace-pre-wrap rounded-lg font-medium text-gray-500">
             {questionSet.description}
           </p>
         </div>
@@ -102,7 +110,7 @@ export default function QuestionSetDetailPage() {
                 }`}
                 onClick={() => {
                   if (isAnyQuestionSelected) {
-                    console.log("질문 가져오기");
+                    setIsQuestionModalOpen(true);
                   }
                 }}
                 disabled={!isAnyQuestionSelected}
@@ -143,6 +151,17 @@ export default function QuestionSetDetailPage() {
           </div>
         </div>
       </div>
+      {isQuestionModalOpen && (
+        <QuestionModal
+          isOpen={isQuestionModalOpen}
+          onClose={() => setIsQuestionModalOpen(false)}
+          onOverlayClick={(e) =>
+            handleOverlayClick(e, () => setIsQuestionModalOpen(false))
+          }
+          selectedQuestions={selectedQuestions}
+          fromId={questionSet.id}
+        />
+      )}
     </div>
   );
 }

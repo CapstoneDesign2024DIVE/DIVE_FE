@@ -38,3 +38,19 @@ export const deleteQuestionSet = async (setId) => {
   const response = await api.delete(`/questionSet/${setId}/delete`);
   return response.data;
 };
+
+export const bringQuestions = async (fromId, { questionIds, toIds }) => {
+  const response = await api.post(`/questionSet/${fromId}`, {
+    questionIds,
+    toIds,
+  });
+  return response.data;
+};
+
+export const bringQuestionSet = async (fromId, selectedQuestionIds) => {
+  const response = await api.post(
+    `/questionSet/${fromId}/new`,
+    selectedQuestionIds,
+  );
+  return response.data;
+};
