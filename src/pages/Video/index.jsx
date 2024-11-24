@@ -1,20 +1,30 @@
+import { useSearchParams } from "react-router-dom";
+import { useGetAllVideos } from "@hooks/useVideo";
+import useSortStore from "@store/sortStore";
+import { getCategoryStyle } from "@utils/categoryStyles";
 import Video from "@components/Video";
 import SortButton from "@components/SortButton";
-import { useGetVideos } from "@hooks/useVideo";
-import useSortStore from "@store/sortStore";
-import { useSearchParams } from "react-router-dom";
-import { getCategoryStyle } from "@utils/categoryStyles";
 
 export default function VideoPage() {
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
   const videoSortOrder = useSortStore((state) => state.videoSortOrder);
-  const { data: videos = [] } = useGetVideos(videoSortOrder);
+  const { data: videos = [], isLoading } = useGetAllVideos(videoSortOrder);
 
   const filteredVideos = videos.filter((video) => {
     if (!category || category === "ALL") return true;
     return video.category === category;
   });
+
+  if (isLoading) {
+    return (
+      <div className="p-4">
+        <div className="flex h-[50vh] items-center justify-center">
+          <div>Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4">
@@ -33,11 +43,17 @@ export default function VideoPage() {
           <SortButton type="video" />
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filteredVideos.map((video) => (
-          <Video key={video.id} {...video} />
-        ))}
-      </div>
+      {filteredVideos.length === 0 ? (
+        <div className="flex h-[50vh] items-center justify-center text-gray-500">
+          등록된 영상이 없습니다.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredVideos.map((video) => (
+            <Video key={video.videoPath || video.id} {...video} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,3 @@
-// src/components/Video.jsx
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { formatDate } from "@utils/dateFormat";
@@ -8,10 +7,10 @@ import VideoModal from "@components/VideoModal";
 export default function Video({
   id,
   nickname,
-  imgSrc,
+  imageUrl,
   thumbnail,
-  title,
-  views,
+  question,
+  views = 0,
   createdAt,
   isMyVideo = false,
   ...videoData
@@ -32,21 +31,21 @@ export default function Video({
       >
         <div className="relative aspect-video w-full overflow-hidden rounded-xl">
           <img
-            src={thumbnail}
-            alt={title}
+            src={thumbnail || "/default-thumbnail.png"}
+            alt={question}
             className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
           />
         </div>
         <div className="flex gap-3 px-1 pt-3">
           <img
-            src={imgSrc}
+            src={imageUrl || "/default-profile.png"}
             alt={nickname}
             className="h-9 w-9 rounded-full object-cover"
           />
           <div className="flex flex-1 flex-col">
             <div className="flex items-center justify-between gap-1">
               <h3 className="line-clamp-2 flex-1 font-medium text-sm text-gray-900 group-hover:text-blue-600">
-                {title}
+                {question}
               </h3>
               {isMyVideo && (
                 <button
@@ -75,9 +74,9 @@ export default function Video({
         video={{
           id,
           nickname,
-          imgSrc,
+          imgSrc: imageUrl,
           thumbnail,
-          title,
+          title: question,
           views,
           createdAt,
           ...videoData,

@@ -1,25 +1,25 @@
-import { useUpdateVideo, useDeleteVideo } from "@hooks/useVideo";
+// import { useUpdateVideo, useDeleteVideo } from "@hooks/useVideo";
 import { useState } from "react";
 
 export default function VideoModal({ isOpen, onClose, onOverlayClick, video }) {
-  const updateVideo = useUpdateVideo();
-  const deleteVideo = useDeleteVideo();
+  // const updateVideo = useUpdateVideo();
+  // const deleteVideo = useDeleteVideo();
   const [isPublic, setIsPublic] = useState(video?.open);
 
   const handleEdit = () => {
-    updateVideo.mutate({
-      videoId: video.id,
-      changes: {
-        ...video,
-        open: isPublic,
-      },
-    });
+    // updateVideo.mutate({
+    //   videoId: video.id,
+    //   changes: {
+    //     ...video,
+    //     open: isPublic,
+    //   },
+    // });
     onClose();
   };
 
   const handleDelete = () => {
     if (window.confirm("정말로 이 영상을 삭제하시겠습니까?")) {
-      deleteVideo.mutate(video.id);
+      // deleteVideo.mutate(video.id);
       onClose();
     }
   };
