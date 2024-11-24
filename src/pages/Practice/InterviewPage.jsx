@@ -5,7 +5,6 @@ import { FiVideo, FiVideoOff } from "react-icons/fi";
 import { HiArrowRight } from "react-icons/hi";
 import Modal from "@components/Modal";
 import { useUploadVideo } from "@hooks/useVideo";
-import { toast } from "react-hot-toast";
 
 export default function InterviewPage() {
   const location = useLocation();
@@ -165,9 +164,7 @@ export default function InterviewPage() {
               isOpen: false,
               videoBlob: blob,
             });
-            toast.success("영상이 저장되었습니다.");
           } catch (error) {
-            toast.error("영상 저장에 실패했습니다.");
             console.error("Upload failed:", error);
           }
 
