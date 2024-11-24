@@ -16,8 +16,8 @@ import MyPage from "@pages/MyPage";
 import MyVideo from "@pages/MyPage/Video";
 import MyQuestionSet from "@pages/MyPage/QuestionSet";
 import QuestionSetDetailPage from "@pages/QuestionSet/QuestionSetDetailPage";
-import InterviewPage from "@pages/practice/InterviewPage";
-import VideoDetailPage from "../pages/Video/VideoDetailPage";
+import InterviewPage from "@pages/Practice/InterviewPage";
+import VideoDetailPage from "@pages/Video/VideoDetailPage";
 
 const routes = [
   { path: "/", element: <LandingPage />, isPublic: true },
