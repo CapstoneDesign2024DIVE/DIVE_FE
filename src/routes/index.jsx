@@ -17,6 +17,7 @@ import MyVideo from "@pages/MyPage/Video";
 import MyQuestionSet from "@pages/MyPage/QuestionSet";
 import QuestionSetDetailPage from "@pages/QuestionSet/QuestionSetDetailPage";
 import InterviewPage from "@pages/practice/InterviewPage";
+import VideoDetailPage from "../pages/Video/VideoDetailPage";
 
 const routes = [
   { path: "/", element: <LandingPage />, isPublic: true },
@@ -51,6 +52,11 @@ const routes = [
   {
     path: "/interview",
     element: <InterviewPage />,
+    isPublic: false,
+  },
+  {
+    path: "/videos/:id",
+    element: <VideoDetailPage />,
     isPublic: false,
   },
 ];

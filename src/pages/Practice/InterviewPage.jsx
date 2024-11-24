@@ -4,6 +4,8 @@ import { IoMdExit } from "react-icons/io";
 import { FiVideo, FiVideoOff } from "react-icons/fi";
 import { HiArrowRight } from "react-icons/hi";
 import Modal from "@components/Modal";
+import { useUploadVideo } from "@hooks/useVideo";
+import { toast } from "react-hot-toast";
 
 export default function InterviewPage() {
   const location = useLocation();
@@ -11,6 +13,7 @@ export default function InterviewPage() {
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const timerRef = useRef(null);
+  const uploadVideoMutation = useUploadVideo();
 
   const { selectedSet, selectedQuestions, selectedDevices } =
     location.state || {};
@@ -56,13 +59,24 @@ export default function InterviewPage() {
 
   const handleNextQuestion = () => {
     if (isRecording) {
-      resetRecording();
-    }
-
-    if (currentQuestionIndex === selectedQuestions.length - 1) {
-      setShowFinishModal(true);
+      if (
+        window.confirm(
+          "녹화를 중단하고 다음 질문으로 넘어가시겠습니까? 현재 녹화 중인 영상은 저장되지 않습니다.",
+        )
+      ) {
+        resetRecording();
+        if (isLastQuestion) {
+          setShowFinishModal(true);
+        } else {
+          setCurrentQuestionIndex((prev) => prev + 1);
+        }
+      }
     } else {
-      setCurrentQuestionIndex((prev) => prev + 1);
+      if (isLastQuestion) {
+        setShowFinishModal(true);
+      } else {
+        setCurrentQuestionIndex((prev) => prev + 1);
+      }
     }
   };
 
@@ -117,15 +131,18 @@ export default function InterviewPage() {
 
   const handleExit = () => {
     if (isRecording) {
-      if (window.confirm("녹화를 중단하고 나가시겠습니까?")) {
-        stopRecording();
+      if (
+        window.confirm(
+          "녹화를 중단하고 나가시겠습니까? 현재 녹화 중인 영상은 저장되지 않습니다.",
+        )
+      ) {
+        resetRecording();
         navigate("/");
       }
     } else {
       navigate("/");
     }
   };
-
   const startRecording = () => {
     try {
       const mediaRecorder = new MediaRecorder(stream);
@@ -138,10 +155,25 @@ export default function InterviewPage() {
         }
       };
 
-      mediaRecorder.onstop = () => {
+      mediaRecorder.onstop = async () => {
         if (mediaRecorder.ondataavailable) {
           const blob = new Blob(chunks, { type: "video/webm" });
-          console.log("Recording stopped, blob created:", blob);
+
+          try {
+            await uploadVideoMutation.mutateAsync({
+              questionId: currentQuestion.id,
+              isOpen: false,
+              videoBlob: blob,
+            });
+            toast.success("영상이 저장되었습니다.");
+          } catch (error) {
+            toast.error("영상 저장에 실패했습니다.");
+            console.error("Upload failed:", error);
+          }
+
+          if (isLastQuestion) {
+            setShowFinishModal(true);
+          }
         }
       };
 
@@ -159,10 +191,6 @@ export default function InterviewPage() {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
       stopTimer();
-
-      if (isLastQuestion) {
-        setShowFinishModal(true);
-      }
     }
   };
 
