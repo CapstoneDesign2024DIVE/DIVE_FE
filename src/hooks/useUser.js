@@ -61,21 +61,24 @@ export function useUser() {
         clientId: import.meta.env.VITE_NAVER_CLIENT_ID,
         redirectUri: `${import.meta.env.VITE_FRONTEND_URL}/auth/naver/callback`,
         baseUrl: "https://nid.naver.com/oauth2.0/authorize",
+        scope: "nickname email profile_image",
       },
       kakao: {
         clientId: import.meta.env.VITE_KAKAO_CLIENT_ID,
         redirectUri: `${import.meta.env.VITE_FRONTEND_URL}/auth/kakao/callback`,
         baseUrl: "https://kauth.kakao.com/oauth/authorize",
+        scope: "profile_nickname profile_image account_email",
       },
     };
 
-    const { clientId, redirectUri, baseUrl } = config[provider];
+    const { clientId, redirectUri, baseUrl, scope } = config[provider];
 
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: redirectUri,
       response_type: "code",
       state: crypto.randomUUID(),
+      scope: scope,
     });
 
     return `${baseUrl}?${params.toString()}`;
@@ -88,7 +91,12 @@ export function useUser() {
 
   const handleCallback = async (provider, code, state) => {
     try {
-      const response = await userApi.handleCallback(provider, code, state);
+      let response;
+      if (provider === "naver") {
+        response = await userApi.handleCallback(provider, code, state);
+      } else if (provider === "kakao") {
+        response = await userApi.handleCallback(provider, code);
+      }
 
       localStorage.setItem("accessToken", response.accessToken);
       localStorage.setItem("refreshToken", response.refreshToken);
