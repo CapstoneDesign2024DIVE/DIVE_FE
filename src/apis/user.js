@@ -26,13 +26,11 @@ export const refreshToken = async () => {
 };
 
 export const handleCallback = async (provider, code, state) => {
-  let params;
-  if (provider === "naver") {
-    params = { code, state };
-  } else if (provider === "kakao") {
-    params = { code };
-  }
+  const data = {
+    code,
+    ...(provider === "naver" && { state }),
+  };
 
-  const response = await api.post(`/auth/${provider}/callback`, params);
+  const response = await api.post(`/auth/${provider}/callback`, data);
   return response.data;
 };
