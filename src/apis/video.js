@@ -32,7 +32,7 @@ export const uploadToS3 = async (presignedUrl, videoFile) => {
       method: "PUT",
       body: videoFile,
       headers: {
-        "Content-Type": "video/mp4",
+        "Content-Type": "video/webm",
       },
     });
   } catch (error) {

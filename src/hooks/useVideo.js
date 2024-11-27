@@ -57,7 +57,7 @@ export const useUploadVideo = () => {
       );
 
       const videoFile = new File([videoBlob], videoKey, {
-        type: "video/mp4",
+        type: "video/webm",
       });
 
       await uploadToS3(presignedUrl, videoFile);

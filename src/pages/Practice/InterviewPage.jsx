@@ -153,14 +153,11 @@ export default function InterviewPage() {
     try {
       chunksRef.current = [];
       const options = {
-        mimeType: "video/mp4",
+        mimeType: "video/webm;codecs=vp8,opus",
       };
 
-      if (!MediaRecorder.isTypeSupported("video/mp4")) {
-        options.mimeType = "video/webm;codecs=h264";
-        if (!MediaRecorder.isTypeSupported("video/webm;codecs=h264")) {
-          options.mimeType = "video/webm";
-        }
+      if (!MediaRecorder.isTypeSupported("video/webm;codecs=vp8,opus")) {
+        options.mimeType = "video/webm";
       }
 
       const mediaRecorder = new MediaRecorder(stream, options);
@@ -176,7 +173,7 @@ export default function InterviewPage() {
         try {
           if (chunksRef.current.length > 0) {
             const videoBlob = new Blob(chunksRef.current, {
-              type: "video/mp4",
+              type: "video/webm",
             });
 
             setIsUploading(true);
