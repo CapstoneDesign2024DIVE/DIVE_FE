@@ -5,6 +5,7 @@ import { FiVideo, FiVideoOff } from "react-icons/fi";
 import { HiArrowRight } from "react-icons/hi";
 import Modal from "@components/Modal";
 import { useUploadVideo } from "@hooks/useVideo";
+import useAuthStore from "@store/authStore";
 
 export default function InterviewPage() {
   const location = useLocation();
@@ -26,6 +27,8 @@ export default function InterviewPage() {
 
   const currentQuestion = selectedQuestions?.[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === selectedQuestions.length - 1;
+
+  const { userInfo } = useAuthStore();
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -142,6 +145,7 @@ export default function InterviewPage() {
       navigate("/");
     }
   };
+
   const startRecording = () => {
     try {
       const mediaRecorder = new MediaRecorder(stream);
@@ -156,20 +160,41 @@ export default function InterviewPage() {
 
       mediaRecorder.onstop = async () => {
         if (mediaRecorder.ondataavailable) {
-          const blob = new Blob(chunks, { type: "video/webm" });
-
+          const videoBlob = new Blob(chunks, { type: "video/webm" });
           try {
+            const formData = new FormData();
+
+            const username = userInfo?.nickname || "anonymous";
+
+            const questionTitle = currentQuestion.contents
+              .replace(/[^a-zA-Z0-9가-힣\s]/g, "")
+              .slice(0, 20)
+              .trim();
+
+            const timestamp = new Date().toISOString().split("T")[0];
+            const fileName =
+              `${username}_${questionTitle}_${currentQuestionIndex + 1}_${timestamp}.webm`.replace(
+                /\s+/g,
+                "_",
+              );
+
+            const videoFile = new File([videoBlob], fileName, {
+              type: "video/webm",
+            });
+            formData.append("newVideo", videoFile);
+
             await uploadVideoMutation.mutateAsync({
               questionId: currentQuestion.id,
               isOpen: false,
-              videoBlob: blob,
+              videoBlob: videoFile,
             });
-          } catch (error) {
-            console.error("Upload failed:", error);
-          }
 
-          if (isLastQuestion) {
-            setShowFinishModal(true);
+            if (isLastQuestion) {
+              setShowFinishModal(true);
+            }
+          } catch (error) {
+            setError("영상 업로드에 실패했습니다.");
+            console.error("Upload failed:", error);
           }
         }
       };

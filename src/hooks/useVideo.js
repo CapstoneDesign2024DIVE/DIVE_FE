@@ -8,9 +8,10 @@ import {
 
 export const useGetAllVideos = (sortOrder) => {
   return useQuery({
-    queryKey: ["videos", "all", sortOrder],
-    queryFn: () => getAllVideos(sortOrder),
+    queryKey: ["videos", "all"],
+    queryFn: () => getAllVideos(),
     select: (data) => {
+      if (!data) return [];
       const sortedData = [...data].sort((a, b) => {
         switch (sortOrder) {
           case 0:
@@ -50,6 +51,9 @@ export const useUploadVideo = () => {
     mutationFn: uploadVideo,
     onSuccess: () => {
       queryClient.invalidateQueries(["videos", "my"]);
+    },
+    onError: (error) => {
+      console.error("Video upload failed:", error);
     },
   });
 };
