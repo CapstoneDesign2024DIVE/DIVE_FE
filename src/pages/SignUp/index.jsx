@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSignUp, useLogin } from "@hooks/useUser";
+import { useUser } from "@hooks/useUser";
 
 export default function SignUpPage() {
   const navigate = useNavigate();
-  const signUpMutation = useSignUp();
-  const loginMutation = useLogin();
+  const { signUp: signUpMutation, login: loginMutation } = useUser();
 
   const [formData, setFormData] = useState({
     username: "",

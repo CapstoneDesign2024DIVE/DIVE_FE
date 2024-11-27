@@ -11,6 +11,9 @@ export function useUser() {
     mutationFn: async (credentials) => {
       const loginResponse = await userApi.login(credentials);
 
+      localStorage.setItem("accessToken", loginResponse.accessToken);
+      localStorage.setItem("refreshToken", loginResponse.refreshToken);
+
       setAuth({
         accessToken: loginResponse.accessToken,
         refreshToken: loginResponse.refreshToken,
@@ -22,17 +25,18 @@ export function useUser() {
 
       return userInfoResponse;
     },
-    onSuccess: () => {
-      navigate("/");
-    },
     onError: (error) => {
       console.error("Login failed:", error);
+      throw error;
     },
   });
 
   const signUpMutation = useMutation({
     mutationFn: async (userData) => {
       const signUpResponse = await userApi.signUp(userData);
+
+      localStorage.setItem("accessToken", signUpResponse.accessToken);
+      localStorage.setItem("refreshToken", signUpResponse.refreshToken);
 
       setAuth({
         accessToken: signUpResponse.accessToken,
@@ -45,11 +49,9 @@ export function useUser() {
 
       return userInfoResponse;
     },
-    onSuccess: () => {
-      navigate("/");
-    },
     onError: (error) => {
       console.error("Sign up failed:", error);
+      throw error;
     },
   });
 
@@ -88,6 +90,9 @@ export function useUser() {
     try {
       const response = await userApi.handleCallback(provider, code, state);
 
+      localStorage.setItem("accessToken", response.accessToken);
+      localStorage.setItem("refreshToken", response.refreshToken);
+
       setAuth({
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
@@ -107,6 +112,8 @@ export function useUser() {
   const logoutUser = async () => {
     try {
       await userApi.logout();
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       clearAuth();
       navigate("/");
     } catch (error) {
