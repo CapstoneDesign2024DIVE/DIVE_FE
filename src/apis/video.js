@@ -16,19 +16,35 @@ export const getVideoById = async (videoId) => {
   return response.data;
 };
 
-export const uploadVideo = async (questionId, isOpen, videoFile) => {
-  const formData = new FormData();
-  formData.append("newVideo", videoFile);
-
-  const response = await api.post(`/video/upload`, formData, {
+export const getPresignedUrl = async (questionId, isOpen) => {
+  const response = await api.get("/video/presigned", {
     params: {
       questionId,
       isOpen,
     },
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
   });
+  return response.data;
+};
 
+export const uploadToS3 = async (presignedUrl, videoFile) => {
+  try {
+    await fetch(presignedUrl, {
+      method: "PUT",
+      body: videoFile,
+      headers: {
+        "Content-Type": "video/mp4",
+      },
+    });
+  } catch (error) {
+    console.error("S3 upload failed:", error);
+    throw error;
+  }
+};
+
+export const completeUpload = async (questionId, videoUrl) => {
+  const response = await api.post("/video/complete-upload", {
+    questionId,
+    videoUrl,
+  });
   return response.data;
 };

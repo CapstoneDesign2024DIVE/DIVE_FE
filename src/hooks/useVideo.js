@@ -48,11 +48,19 @@ export const useUploadVideo = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ questionId, isOpen, videoBlob }) => {
-      const videoFile = new File([videoBlob], "video.mp4", {
+    mutationFn: async ({ questionId, isOpen, videoBlob }) => {
+      const { presignedUrl, videoKey } = await getPresignedUrl(
+        questionId,
+        isOpen,
+      );
+
+      const videoFile = new File([videoBlob], videoKey, {
         type: "video/mp4",
       });
-      return uploadVideo(questionId, isOpen, videoFile);
+
+      await uploadToS3(presignedUrl, videoFile);
+
+      return await completeUpload(questionId, videoKey);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["videos"] });
