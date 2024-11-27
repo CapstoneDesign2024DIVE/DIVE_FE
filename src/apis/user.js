@@ -10,12 +10,24 @@ export const login = async (credentials) => {
   return response.data;
 };
 
-// export const socialLogin = async ({ code, provider }) => {
-//   const response = await api.post(`/login/oauth2/code/${provider}`, { code });
-//   return response.data;
-// };
-
 export const signUp = async (userData) => {
   const response = await api.post("/siteUser/signup", userData);
+  return response.data;
+};
+
+export const logout = async () => {
+  const response = await api.get("/auth/logout");
+  return response.data;
+};
+
+export const refreshToken = async () => {
+  const response = await api.post("/auth/refresh");
+  return response.data;
+};
+
+export const handleCallback = async (provider, code, state) => {
+  const response = await api.get(`/auth/${provider}/callback`, {
+    params: { code, state },
+  });
   return response.data;
 };

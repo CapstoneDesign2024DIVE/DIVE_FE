@@ -5,6 +5,7 @@ import PublicRoute from "./PublicRoute";
 import PublicLayout from "@layouts/PublicLayout";
 import LandingPage from "@pages/Landing";
 import LoginPage from "@pages/Login";
+import LoginCallback from "@pages/Login/LoginCallback";
 import SignUpPage from "@pages/SignUp";
 import HomePage from "@pages/Home";
 import QuestionSetPage from "@pages/QuestionSet";
@@ -58,6 +59,11 @@ const routes = [
     path: "/videos/:id",
     element: <VideoDetailPage />,
     isPublic: false,
+  },
+  {
+    path: "/auth/:provider/callback",
+    element: <LoginCallback />,
+    isPublic: true,
   },
 ];
 
