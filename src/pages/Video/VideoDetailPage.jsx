@@ -2,10 +2,13 @@ import { useParams } from "react-router-dom";
 import { useGetVideo } from "@hooks/useVideo";
 import { formatDate } from "@utils/dateFormat";
 import { getCategoryStyle } from "@utils/categoryStyles";
+import useAuthStore from "@store/authStore";
+import VideoComments from "./VideoComments";
 
 export default function VideoDetailPage() {
   const { id } = useParams();
   const { data: video, isLoading } = useGetVideo(id);
+  const { userInfo } = useAuthStore();
 
   if (isLoading) {
     return (
@@ -62,51 +65,15 @@ export default function VideoDetailPage() {
           </div>
         </div>
       </div>
-      <div className="mt-6">
-        <h2 className="mb-4 font-bold text-lg">댓글</h2>
-        <div className="mb-4">
-          <div className="flex gap-3">
-            <img
-              src="/default-profile.png"
-              alt="프로필"
-              className="h-8 w-8 rounded-full"
-            />
-            <div className="flex-1">
-              <input
-                type="text"
-                placeholder="댓글 추가..."
-                className="w-full rounded-lg border border-gray-200 p-2 focus:border-blue-500 focus:outline-none"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="space-y-4">
-          {/* 댓글 목록 - 목데이터 */}
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="flex gap-3">
-              <img
-                src="/default-profile.png"
-                alt="프로필"
-                className="h-8 w-8 rounded-full"
-              />
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-medium">면접관{i}</span>
-                  <span className="text-sm text-gray-500">2일 전</span>
-                </div>
-                <p className="mt-1 text-gray-900">
-                  Virtual DOM에 대해 잘 설명해주셨습니다. 추가로 Virtual DOM의
-                  한계점에 대해서도 공부해보시면 좋을 것 같네요.
-                </p>
-                <div className="mt-2 flex gap-4 text-sm text-gray-500">
-                  <button className="hover:text-gray-900">좋아요</button>
-                  <button className="hover:text-gray-900">답글</button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+
+      <VideoComments
+        videoId={id}
+        currentUser={{
+          id: userInfo?.id,
+          imageUrl: userInfo?.imageUrl,
+          nickname: userInfo?.nickname,
+        }}
+      />
     </div>
   );
 }
