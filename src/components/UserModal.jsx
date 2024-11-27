@@ -2,16 +2,23 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "@store/authStore";
 import useNavbarStore from "@store/navbarStore";
+import { useUser } from "@hooks/useUser";
 
 export default function UserModal() {
   const navigate = useNavigate();
-  const logout = useAuthStore((state) => state.logout);
+  const clearAuth = useAuthStore((state) => state.logout);
   const resetOpenMenuItem = useNavbarStore((state) => state.resetOpenMenuItem);
+  const { logout } = useUser();
 
-  const handleLogout = () => {
-    logout();
-    resetOpenMenuItem();
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      await logout();
+      clearAuth();
+      resetOpenMenuItem();
+      navigate("/");
+    } catch (error) {
+      console.error("로그아웃 실패:", error);
+    }
   };
 
   const handleNavigation = (path) => {
