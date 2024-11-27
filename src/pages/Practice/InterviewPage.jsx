@@ -13,6 +13,7 @@ export default function InterviewPage() {
   const videoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const timerRef = useRef(null);
+  const chunksRef = useRef([]);
   const uploadVideoMutation = useUploadVideo();
 
   const { selectedSet, selectedQuestions, selectedDevices } =
@@ -24,6 +25,7 @@ export default function InterviewPage() {
   const [timer, setTimer] = useState(0);
   const [isReady, setIsReady] = useState(false);
   const [showFinishModal, setShowFinishModal] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const currentQuestion = selectedQuestions?.[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === selectedQuestions.length - 1;
@@ -56,6 +58,7 @@ export default function InterviewPage() {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
       stopTimer();
+      chunksRef.current = [];
     }
   };
 
@@ -148,58 +151,56 @@ export default function InterviewPage() {
 
   const startRecording = () => {
     try {
-      const mediaRecorder = new MediaRecorder(stream);
+      chunksRef.current = [];
+      const options = {
+        mimeType: "video/mp4",
+      };
+
+      if (!MediaRecorder.isTypeSupported("video/mp4")) {
+        options.mimeType = "video/webm;codecs=h264";
+        if (!MediaRecorder.isTypeSupported("video/webm;codecs=h264")) {
+          options.mimeType = "video/webm";
+        }
+      }
+
+      const mediaRecorder = new MediaRecorder(stream, options);
       mediaRecorderRef.current = mediaRecorder;
-      const chunks = [];
 
       mediaRecorder.ondataavailable = (e) => {
         if (e.data.size > 0) {
-          chunks.push(e.data);
+          chunksRef.current.push(e.data);
         }
       };
 
       mediaRecorder.onstop = async () => {
-        if (mediaRecorder.ondataavailable) {
-          const videoBlob = new Blob(chunks, { type: "video/webm" });
-          try {
-            const formData = new FormData();
-
-            const username = userInfo?.nickname || "anonymous";
-
-            const questionTitle = currentQuestion.contents
-              .replace(/[^a-zA-Z0-9가-힣\s]/g, "")
-              .slice(0, 20)
-              .trim();
-
-            const timestamp = new Date().toISOString().split("T")[0];
-            const fileName =
-              `${username}_${questionTitle}_${currentQuestionIndex + 1}_${timestamp}.webm`.replace(
-                /\s+/g,
-                "_",
-              );
-
-            const videoFile = new File([videoBlob], fileName, {
-              type: "video/webm",
+        try {
+          if (chunksRef.current.length > 0) {
+            const videoBlob = new Blob(chunksRef.current, {
+              type: "video/mp4",
             });
-            formData.append("newVideo", videoFile);
 
+            setIsUploading(true);
             await uploadVideoMutation.mutateAsync({
               questionId: currentQuestion.id,
               isOpen: false,
-              videoBlob: videoFile,
+              videoBlob,
             });
+            setIsUploading(false);
 
             if (isLastQuestion) {
               setShowFinishModal(true);
             }
-          } catch (error) {
-            setError("영상 업로드에 실패했습니다.");
-            console.error("Upload failed:", error);
           }
+        } catch (error) {
+          setError("영상 업로드에 실패했습니다.");
+          console.error("Upload failed:", error);
+          setIsUploading(false);
+        } finally {
+          chunksRef.current = [];
         }
       };
 
-      mediaRecorder.start();
+      mediaRecorder.start(500);
       setIsRecording(true);
       startTimer();
     } catch (err) {
@@ -245,7 +246,7 @@ export default function InterviewPage() {
         <div className="relative aspect-video w-full max-w-4xl overflow-hidden rounded-2xl bg-black shadow-xl">
           <div className="absolute right-4 top-4 z-10">
             <div className="flex items-center gap-2 rounded-lg bg-black/50 px-3 py-1.5 text-white backdrop-blur-sm">
-              {isReady && !isRecording && (
+              {isReady && !isRecording && !isUploading && (
                 <div className="flex items-center gap-2">
                   <div className="h-2.5 w-2.5 rounded-full bg-green-500"></div>
                   <span className="font-medium text-sm">녹화 준비중</span>
@@ -258,6 +259,12 @@ export default function InterviewPage() {
                   <span className="font-medium text-sm tabular-nums">
                     {formatTime(timer)}
                   </span>
+                </div>
+              )}
+              {isUploading && (
+                <div className="flex items-center gap-2">
+                  <div className="h-2.5 w-2.5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  <span className="font-medium text-sm">업로드중...</span>
                 </div>
               )}
             </div>
@@ -291,7 +298,7 @@ export default function InterviewPage() {
           <div className="flex gap-2">
             <button
               onClick={toggleRecording}
-              disabled={!isReady}
+              disabled={!isReady || isUploading}
               className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium ${
                 isRecording
                   ? "bg-red-500 text-white hover:bg-red-600"
@@ -303,7 +310,8 @@ export default function InterviewPage() {
             </button>
             <button
               onClick={handleNextQuestion}
-              className="flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600"
+              disabled={isUploading}
+              className="flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {currentQuestionIndex === selectedQuestions.length - 1
                 ? "면접 종료"

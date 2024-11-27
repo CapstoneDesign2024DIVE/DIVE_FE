@@ -1,32 +1,30 @@
 import { useSearchParams } from "react-router-dom";
-// import { useGetAllVideos } from "@hooks/useVideo";
-// import useSortStore from "@store/sortStore";
+import { useGetAllVideos } from "@hooks/useVideo";
+import useSortStore from "@store/sortStore";
 import { getCategoryStyle } from "@utils/categoryStyles";
 import Video from "@components/Video";
 import SortButton from "@components/SortButton";
-import { mockVideos } from "@mocks/videoMock";
 
 export default function VideoPage() {
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
-  // const videoSortOrder = useSortStore((state) => state.videoSortOrder);
-  // const { data: videos = [], isLoading } = useGetAllVideos(videoSortOrder);
-  const videos = mockVideos;
+  const videoSortOrder = useSortStore((state) => state.videoSortOrder);
+  const { data: videos = [], isLoading } = useGetAllVideos(videoSortOrder);
 
   const filteredVideos = videos.filter((video) => {
     if (!category || category === "ALL") return true;
     return video.category === category;
   });
 
-  // if (isLoading) {
-  //   return (
-  //     <div className="p-4">
-  //       <div className="flex h-[50vh] items-center justify-center">
-  //         <div>Loading...</div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (isLoading) {
+    return (
+      <div className="p-4">
+        <div className="flex h-[50vh] items-center justify-center">
+          <div>Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4">

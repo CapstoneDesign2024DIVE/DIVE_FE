@@ -1,10 +1,11 @@
 import api from "./axios";
 
-export const getAllVideos = async () => {
-  const response = await api.get("/video/all");
+export const getAllVideos = async (sortOrder) => {
+  const response = await api.get("/video/all", {
+    params: { sort: sortOrder },
+  });
   return response.data;
 };
-
 export const getMyVideos = async () => {
   const response = await api.get("/video/myVideos");
   return response.data;
@@ -15,19 +16,19 @@ export const getVideoById = async (videoId) => {
   return response.data;
 };
 
-export const uploadVideo = async ({ questionId, isOpen, videoBlob }) => {
+export const uploadVideo = async (questionId, isOpen, videoFile) => {
   const formData = new FormData();
-  const videoFile = new File([videoBlob], "video.webm", { type: "video/webm" });
   formData.append("newVideo", videoFile);
 
-  const response = await api.post(
-    `/video/upload?questionId=${questionId}&isOpen=${isOpen}`,
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+  const response = await api.post(`/video/upload`, formData, {
+    params: {
+      questionId,
+      isOpen,
     },
-  );
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
   return response.data;
 };

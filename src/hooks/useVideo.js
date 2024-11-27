@@ -48,12 +48,14 @@ export const useUploadVideo = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: uploadVideo,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["videos", "my"]);
+    mutationFn: ({ questionId, isOpen, videoBlob }) => {
+      const videoFile = new File([videoBlob], "video.mp4", {
+        type: "video/mp4",
+      });
+      return uploadVideo(questionId, isOpen, videoFile);
     },
-    onError: (error) => {
-      console.error("Video upload failed:", error);
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["videos"] });
     },
   });
 };
