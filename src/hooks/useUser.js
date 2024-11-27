@@ -117,14 +117,21 @@ export function useUser() {
   const refreshUserToken = async () => {
     try {
       const data = await userApi.refreshToken();
+      const { accessToken, refreshToken, key } = data;
+
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+
       setAuth({
-        accessToken: data.accessToken,
-        refreshToken: data.refreshToken,
-        key: data.key,
+        accessToken,
+        refreshToken,
+        key,
       });
       return data;
     } catch (error) {
       console.error("Token refresh failed:", error);
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       clearAuth();
       navigate("/login");
     }
