@@ -18,8 +18,6 @@ export default function Video({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const formattedDate = formatDate(createdAt);
 
-  console.log(id, nickname, imageUrl);
-
   const handleMenuClick = (e) => {
     e.preventDefault();
     setIsModalOpen(true);
@@ -81,7 +79,6 @@ export default function Video({
           title: question,
           views,
           createdAt,
-          isOpen,
           ...videoData,
         }}
       />
