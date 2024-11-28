@@ -22,48 +22,53 @@ const VideoComments = ({ videoId, currentUser }) => {
   const updateCommentMutation = useUpdateComment();
   const deleteCommentMutation = useDeleteComment();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newComment.trim()) return;
+    try {
+      if (!newComment.trim()) return;
 
-    createCommentMutation.mutate(
-      {
+      await createCommentMutation.mutateAsync({
         videoId,
         contents: newComment.trim(),
-      },
-      {
-        onSuccess: () => {
-          setNewComment("");
-        },
-      },
-    );
+      });
+
+      setNewComment("");
+    } catch (error) {
+      console.error("Failed to create comment:", error);
+      alert("댓글 작성에 실패했습니다.");
+    }
   };
 
-  const handleUpdate = (commentId) => {
-    if (!editContent.trim()) return;
+  const handleUpdate = async (commentId) => {
+    try {
+      if (!editContent.trim()) return;
 
-    updateCommentMutation.mutate(
-      {
+      await updateCommentMutation.mutateAsync({
         videoId,
         commentId,
         contents: editContent.trim(),
-      },
-      {
-        onSuccess: () => {
-          setEditingId(null);
-          setEditContent("");
-        },
-      },
-    );
+      });
+
+      setEditingId(null);
+      setEditContent("");
+    } catch (error) {
+      console.error("Failed to update comment:", error);
+      alert("댓글 수정에 실패했습니다.");
+    }
   };
 
-  const handleDelete = (commentId, contents) => {
-    if (window.confirm("댓글을 삭제하시겠습니까?")) {
-      deleteCommentMutation.mutate({
+  const handleDelete = async (commentId, contents) => {
+    try {
+      if (!window.confirm("댓글을 삭제하시겠습니까?")) return;
+
+      await deleteCommentMutation.mutateAsync({
         videoId,
         commentId,
         contents,
       });
+    } catch (error) {
+      console.error("Failed to delete comment:", error);
+      alert("댓글 삭제에 실패했습니다.");
     }
   };
 
@@ -94,10 +99,10 @@ const VideoComments = ({ videoId, currentUser }) => {
           </div>
           <button
             type="submit"
-            disabled={!newComment.trim()}
+            disabled={createCommentMutation.isPending || !newComment.trim()}
             className="rounded-lg bg-blue-500 px-4 py-2 text-white disabled:opacity-50"
           >
-            등록
+            {createCommentMutation.isPending ? "등록 중..." : "등록"}
           </button>
         </form>
       </div>
@@ -135,13 +140,15 @@ const VideoComments = ({ videoId, currentUser }) => {
                     />
                     <button
                       onClick={() => handleUpdate(comment.id)}
-                      className="rounded-lg bg-blue-500 px-3 py-1 text-white"
+                      disabled={updateCommentMutation.isPending}
+                      className="rounded-lg bg-blue-500 px-3 py-1 text-white disabled:opacity-50"
                     >
-                      수정
+                      {updateCommentMutation.isPending ? "수정 중..." : "수정"}
                     </button>
                     <button
                       onClick={() => setEditingId(null)}
-                      className="rounded-lg bg-gray-200 px-3 py-1"
+                      disabled={updateCommentMutation.isPending}
+                      className="rounded-lg bg-gray-200 px-3 py-1 disabled:opacity-50"
                     >
                       취소
                     </button>
@@ -156,6 +163,10 @@ const VideoComments = ({ videoId, currentUser }) => {
                       <button
                         onClick={() => startEditing(comment)}
                         className="hover:text-gray-900"
+                        disabled={
+                          updateCommentMutation.isPending ||
+                          deleteCommentMutation.isPending
+                        }
                       >
                         수정
                       </button>
@@ -164,8 +175,14 @@ const VideoComments = ({ videoId, currentUser }) => {
                           handleDelete(comment.id, comment.contents)
                         }
                         className="hover:text-gray-900"
+                        disabled={
+                          updateCommentMutation.isPending ||
+                          deleteCommentMutation.isPending
+                        }
                       >
-                        삭제
+                        {deleteCommentMutation.isPending
+                          ? "삭제 중..."
+                          : "삭제"}
                       </button>
                     </>
                   )}
