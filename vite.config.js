@@ -18,13 +18,4 @@ export default defineConfig({
       "@mocks": path.resolve(__dirname, "./src/mocks"),
     },
   },
-  // server: {
-  //   proxy: {
-  //     "/api": {
-  //       target: "http://43.203.123.32:8080",
-  //       changeOrigin: true,
-  //       rewrite: (path) => path.replace(/^\/api/, ""),
-  //     },
-  //   },
-  // },
 });

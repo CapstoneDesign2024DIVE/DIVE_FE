@@ -51,15 +51,24 @@ export const useUploadVideo = () => {
 
   return useMutation({
     mutationFn: async ({ questionId, isOpen, videoBlob }) => {
-      const { presignedUrl, videoKey } = await getPresignedUrl(questionId);
+      try {
+        console.log("Starting upload with questionId:", questionId);
 
-      const videoFile = new File([videoBlob], videoKey, {
-        type: "video/webm",
-      });
+        const presignedUrlResponse = await getPresignedUrl(questionId);
+        console.log("Presigned URL Response:", presignedUrlResponse);
 
-      await uploadToS3(presignedUrl, videoFile);
+        const { presignedUrl, videoKey } = presignedUrlResponse;
 
-      return await completeUpload(questionId, videoKey, isOpen);
+        const videoFile = new File([videoBlob], videoKey, {
+          type: "video/webm",
+        });
+
+        await uploadToS3(presignedUrl, videoFile);
+        return await completeUpload(questionId, videoKey, isOpen);
+      } catch (error) {
+        console.error("Upload error:", error);
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["videos"] });
