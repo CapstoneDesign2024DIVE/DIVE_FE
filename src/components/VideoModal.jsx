@@ -2,21 +2,19 @@ import { useUpdateVideo, useDeleteVideo } from "@hooks/useVideo";
 import { useState } from "react";
 
 export default function VideoModal({ isOpen, onClose, onOverlayClick, video }) {
-  const updateVideo = useUpdateVideo();
+  const updateVisibility = useUpdateVideoVisibility();
   const deleteVideo = useDeleteVideo();
   const [isPublic, setIsPublic] = useState(video?.isOpen);
 
   const handleEdit = async () => {
     try {
-      await updateVideo.mutateAsync({
+      await updateVisibility.mutateAsync({
         videoId: video.id,
-        changes: {
-          open: isPublic,
-        },
+        isOpen: isPublic,
       });
       onClose();
     } catch (error) {
-      console.error("비디오 수정 실패:", error);
+      console.error("비디오 공개 설정 변경 실패:", error);
     }
   };
 

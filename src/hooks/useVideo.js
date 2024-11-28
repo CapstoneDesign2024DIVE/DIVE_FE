@@ -78,11 +78,11 @@ export const useUploadVideo = () => {
   });
 };
 
-export const useUpdateVideo = () => {
+export const useUpdateVideoVisibility = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: updateVideo,
+    mutationFn: ({ videoId, isOpen }) => updateVideoVisibility(videoId, isOpen),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["videos"] });
       queryClient.invalidateQueries({ queryKey: ["video"] });

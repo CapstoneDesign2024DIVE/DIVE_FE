@@ -49,10 +49,8 @@ export const completeUpload = async (questionId, videoKey, isOpen) => {
   return response.data;
 };
 
-export const updateVideo = async ({ videoId, changes }) => {
-  const response = await api.patch(`/video/${videoId}`, {
-    isOpen: changes.open,
-  });
+export const updateVideoVisibility = async (videoId, isOpen) => {
+  const response = await api.put(`/video/${videoId}/change/visibility`, isOpen);
   return response.data;
 };
 
