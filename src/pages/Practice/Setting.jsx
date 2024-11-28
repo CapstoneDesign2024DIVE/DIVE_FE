@@ -7,7 +7,6 @@ export default function SettingPage() {
   const navigate = useNavigate();
   const { selectedSet, selectedQuestions } = location.state || {};
   const videoRef = useRef(null);
-  서;
 
   const [devices, setDevices] = useState({
     videoDevices: [],
