@@ -16,20 +16,16 @@ export default function Video({
   ...videoData
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [thumbnailError, setThumbnailError] = useState(false);
-  const [profileError, setProfileError] = useState(false);
   const formattedDate = formatDate(createdAt);
 
   const handleMenuClick = (e) => {
     e.preventDefault();
-    e.stopPropagation();
     setIsModalOpen(true);
   };
 
-  const getFormattedUrl = (url, defaultUrl) => {
+  const formatUrl = (url, defaultUrl) => {
     if (!url) return defaultUrl;
-    if (url.startsWith("http")) return url;
-    return `https://du9fwrg5k8ff9.cloudfront.net/${url.replace(/^\//, "")}`;
+    return url.replace("https//", "");
   };
 
   return (
@@ -40,26 +36,16 @@ export default function Video({
       >
         <div className="relative aspect-video w-full overflow-hidden rounded-xl">
           <img
-            src={
-              thumbnailError
-                ? "/default-thumbnail.png"
-                : getFormattedUrl(thumbnail, "/default-thumbnail.png")
-            }
+            src={thumbnail || "/default-thumbnail.png"}
             alt={question}
             className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
-            onError={() => setThumbnailError(true)}
           />
         </div>
         <div className="flex gap-3 px-1 pt-3">
           <img
-            src={
-              profileError
-                ? "/default-profile.png"
-                : getFormattedUrl(imageUrl, "/default-profile.png")
-            }
+            src={formatUrl(thumbnail, "/default-thumbnail.png")}
             alt={nickname}
             className="h-9 w-9 rounded-full object-cover"
-            onError={() => setProfileError(true)}
           />
           <div className="flex flex-1 flex-col">
             <div className="flex items-center justify-between gap-1">
