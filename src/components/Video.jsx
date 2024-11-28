@@ -17,7 +17,6 @@ export default function Video({
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const formattedDate = formatDate(createdAt);
-  console.log(id);
 
   const handleMenuClick = (e) => {
     e.preventDefault();
