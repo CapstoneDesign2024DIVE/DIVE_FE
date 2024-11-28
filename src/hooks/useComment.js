@@ -3,10 +3,8 @@ import { createComment, updateComment, deleteComment } from "@apis/comment";
 
 export const useCreateComment = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: ({ videoId, userId, contents }) =>
-      createComment({ videoId, userId, contents }),
+    mutationFn: ({ videoId, contents }) => createComment({ videoId, contents }),
     onSuccess: (newComment, { videoId }) => {
       queryClient.setQueryData(["comments", videoId], (oldData) => {
         return [...(oldData || []), newComment];
@@ -17,10 +15,9 @@ export const useCreateComment = () => {
 
 export const useUpdateComment = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: ({ commentId, userId, contents, videoId }) =>
-      updateComment(commentId, { userId, contents }),
+    mutationFn: ({ videoId, commentId, contents }) =>
+      updateComment({ videoId, commentId, contents }),
     onSuccess: (updatedComment, { videoId, commentId }) => {
       queryClient.setQueryData(["comments", videoId], (oldData) => {
         return oldData?.map((comment) =>
@@ -33,10 +30,9 @@ export const useUpdateComment = () => {
 
 export const useDeleteComment = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: ({ commentId, userId, videoId }) =>
-      deleteComment(commentId, userId),
+    mutationFn: ({ videoId, commentId, contents }) =>
+      deleteComment({ videoId, commentId, contents }),
     onSuccess: (_, { videoId, commentId }) => {
       queryClient.setQueryData(["comments", videoId], (oldData) => {
         return oldData?.filter((comment) => comment.id !== commentId);

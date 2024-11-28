@@ -15,12 +15,25 @@ const VideoComments = ({ videoId, currentUser }) => {
 
   const { data: comments = [], isLoading } = useQuery({
     queryKey: ["comments", videoId],
-    queryFn: () => getComments(videoId, currentUser?.id),
+    queryFn: () => getComments(videoId),
   });
 
-  const createCommentMutation = useCreateComment();
-  const updateCommentMutation = useUpdateComment();
-  const deleteCommentMutation = useDeleteComment();
+  createCommentMutation.mutate({
+    videoId,
+    contents: newComment.trim(),
+  });
+
+  updateCommentMutation.mutate({
+    videoId,
+    commentId,
+    contents: editContent.trim(),
+  });
+
+  deleteCommentMutation.mutate({
+    videoId,
+    commentId,
+    contents: comment.contents,
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
