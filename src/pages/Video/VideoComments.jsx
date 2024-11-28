@@ -29,7 +29,7 @@ const VideoComments = ({ videoId, currentUser }) => {
 
       await createCommentMutation.mutateAsync({
         videoId,
-        contents: newComment.trim(),
+        contents: newComment,
       });
 
       setNewComment("");
@@ -46,7 +46,7 @@ const VideoComments = ({ videoId, currentUser }) => {
       await updateCommentMutation.mutateAsync({
         videoId,
         commentId,
-        contents: editContent.trim(),
+        contents: editContent,
       });
 
       setEditingId(null);
@@ -57,14 +57,13 @@ const VideoComments = ({ videoId, currentUser }) => {
     }
   };
 
-  const handleDelete = async (commentId, contents) => {
+  const handleDelete = async (commentId) => {
     try {
       if (!window.confirm("댓글을 삭제하시겠습니까?")) return;
 
       await deleteCommentMutation.mutateAsync({
         videoId,
         commentId,
-        contents,
       });
     } catch (error) {
       console.error("Failed to delete comment:", error);
@@ -171,9 +170,7 @@ const VideoComments = ({ videoId, currentUser }) => {
                         수정
                       </button>
                       <button
-                        onClick={() =>
-                          handleDelete(comment.id, comment.contents)
-                        }
+                        onClick={() => handleDelete(comment.id)}
                         className="hover:text-gray-900"
                         disabled={
                           updateCommentMutation.isPending ||

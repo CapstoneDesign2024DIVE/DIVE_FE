@@ -2,8 +2,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useCreateComment = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: ({ videoId, contents }) => createComment({ videoId, contents }),
+    onError: (error) => {
+      console.error("Failed to create comment:", error.message);
+    },
     onSuccess: (newComment, { videoId }) => {
       queryClient.setQueryData(["comments", videoId], (oldData) => {
         return [...(oldData || []), newComment];
@@ -14,6 +18,7 @@ export const useCreateComment = () => {
 
 export const useUpdateComment = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: ({ videoId, commentId, contents }) =>
       updateComment({ videoId, commentId, contents }),
@@ -29,6 +34,7 @@ export const useUpdateComment = () => {
 
 export const useDeleteComment = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: ({ videoId, commentId }) =>
       deleteComment({ videoId, commentId }),

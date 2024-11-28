@@ -7,12 +7,16 @@ export const getComments = async (videoId) => {
 };
 
 export const createComment = async ({ videoId, contents }) => {
+  if (!contents || contents.trim() === "") {
+    throw new Error("Comment cannot be empty");
+  }
+
   const response = await api.post(
     `/comment/${videoId}/create`,
-    { contents },
+    contents.trim(),
     {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "text/plain",
       },
     },
   );
@@ -20,9 +24,15 @@ export const createComment = async ({ videoId, contents }) => {
 };
 
 export const updateComment = async ({ videoId, commentId, contents }) => {
-  const response = await api.put(`/comment/${videoId}/${commentId}/update`, {
+  const response = await api.put(
+    `/comment/${videoId}/${commentId}/update`,
     contents,
-  });
+    {
+      headers: {
+        "Content-Type": "text/plain",
+      },
+    },
+  );
   return response.data;
 };
 
