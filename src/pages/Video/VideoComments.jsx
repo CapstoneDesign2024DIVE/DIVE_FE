@@ -5,7 +5,7 @@ import {
   useUpdateComment,
   useDeleteComment,
 } from "@hooks/useComment";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getComments } from "@apis/comment";
 
 const VideoComments = ({ videoId, currentUser }) => {
@@ -13,6 +13,7 @@ const VideoComments = ({ videoId, currentUser }) => {
   const [editingId, setEditingId] = useState(null);
   const [editContents, setEditContents] = useState({});
   const [deletingIds, setDeletingIds] = useState(new Set());
+  const queryClient = useQueryClient();
 
   const { data: comments = [], isLoading } = useQuery({
     queryKey: ["comments", videoId],
