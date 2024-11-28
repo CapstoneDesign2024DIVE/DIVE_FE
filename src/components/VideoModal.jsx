@@ -1,4 +1,4 @@
-import { useUpdateVideo, useDeleteVideo } from "@hooks/useVideo";
+import { useUpdateVideoVisibility, useDeleteVideo } from "@hooks/useVideo";
 import { useState } from "react";
 
 export default function VideoModal({ isOpen, onClose, onOverlayClick, video }) {
