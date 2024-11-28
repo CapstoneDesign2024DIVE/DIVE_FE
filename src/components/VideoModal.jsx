@@ -8,6 +8,10 @@ export default function VideoModal({ isOpen, onClose, onOverlayClick, video }) {
 
   const handleEdit = async () => {
     try {
+      if (!video?.id) {
+        throw new Error("Video ID is required");
+      }
+
       await updateVisibility.mutateAsync({
         videoId: video.id,
         isOpen: isPublic,
