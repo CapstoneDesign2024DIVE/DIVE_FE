@@ -37,11 +37,11 @@ export const useDeleteComment = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ videoId, commentId }) =>
-      deleteComment({ videoId, commentId }),
+    mutationFn: ({ videoId, commentId, contents }) =>
+      deleteComment({ videoId, commentId, contents }),
     onSuccess: (_, { videoId, commentId }) => {
       queryClient.setQueryData(["comments", videoId], (oldData) => {
-        return oldData?.filter((comment) => comment.id !== commentId);
+        return oldData?.filter((comment) => comment.commentId !== commentId);
       });
     },
   });

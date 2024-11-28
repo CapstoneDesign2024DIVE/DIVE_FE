@@ -36,7 +36,12 @@ export const updateComment = async ({ videoId, commentId, contents }) => {
   return response.data;
 };
 
-export const deleteComment = async ({ videoId, commentId }) => {
-  const response = await api.delete(`/comment/${videoId}/${commentId}/delete`);
+export const deleteComment = async ({ videoId, commentId, contents }) => {
+  const response = await api.delete(`/comment/${videoId}/${commentId}/delete`, {
+    data: contents,
+    headers: {
+      "Content-Type": "text/plain",
+    },
+  });
   return response.data;
 };

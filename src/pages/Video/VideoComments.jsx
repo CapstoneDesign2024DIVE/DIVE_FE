@@ -72,6 +72,7 @@ const VideoComments = ({ videoId, currentUser }) => {
       await deleteCommentMutation.mutateAsync({
         videoId,
         commentId: comment.commentId,
+        contents: comment.contents,
       });
 
       setDeletingIds((prev) => {
