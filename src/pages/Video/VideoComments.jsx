@@ -18,22 +18,9 @@ const VideoComments = ({ videoId, currentUser }) => {
     queryFn: () => getComments(videoId),
   });
 
-  createCommentMutation.mutate({
-    videoId,
-    contents: newComment.trim(),
-  });
-
-  updateCommentMutation.mutate({
-    videoId,
-    commentId,
-    contents: editContent.trim(),
-  });
-
-  deleteCommentMutation.mutate({
-    videoId,
-    commentId,
-    contents: comment.contents,
-  });
+  const createCommentMutation = useCreateComment();
+  const updateCommentMutation = useUpdateComment();
+  const deleteCommentMutation = useDeleteComment();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -42,7 +29,6 @@ const VideoComments = ({ videoId, currentUser }) => {
     createCommentMutation.mutate(
       {
         videoId,
-        userId: currentUser?.id,
         contents: newComment.trim(),
       },
       {
@@ -58,9 +44,8 @@ const VideoComments = ({ videoId, currentUser }) => {
 
     updateCommentMutation.mutate(
       {
-        commentId,
         videoId,
-        userId: currentUser?.id,
+        commentId,
         contents: editContent.trim(),
       },
       {
@@ -72,12 +57,12 @@ const VideoComments = ({ videoId, currentUser }) => {
     );
   };
 
-  const handleDelete = (commentId) => {
+  const handleDelete = (commentId, contents) => {
     if (window.confirm("댓글을 삭제하시겠습니까?")) {
       deleteCommentMutation.mutate({
-        commentId,
-        userId: currentUser?.id,
         videoId,
+        commentId,
+        contents,
       });
     }
   };
@@ -91,7 +76,6 @@ const VideoComments = ({ videoId, currentUser }) => {
     <div className="mt-6">
       <h2 className="mb-4 font-bold text-lg">댓글</h2>
 
-      {/* Comment Input */}
       <div className="mb-4">
         <form onSubmit={handleSubmit} className="flex gap-3">
           <img
@@ -118,7 +102,6 @@ const VideoComments = ({ videoId, currentUser }) => {
         </form>
       </div>
 
-      {/* Comments List */}
       <div className="space-y-4">
         {isLoading ? (
           <div className="text-center">댓글을 불러오는 중...</div>
@@ -177,7 +160,9 @@ const VideoComments = ({ videoId, currentUser }) => {
                         수정
                       </button>
                       <button
-                        onClick={() => handleDelete(comment.id)}
+                        onClick={() =>
+                          handleDelete(comment.id, comment.contents)
+                        }
                         className="hover:text-gray-900"
                       >
                         삭제
