@@ -1,14 +1,8 @@
 import { useGetMyVideos } from "@hooks/useVideo";
 import Video from "@components/Video";
-import { useNavigate } from "react-router-dom";
 
 export default function MyVideo() {
   const { data: videos, isLoading } = useGetMyVideos();
-  const navigate = useNavigate();
-
-  const handleVideoClick = (videoId) => {
-    navigate(`/videos/${videoId}`);
-  };
 
   if (isLoading) {
     return (
@@ -34,13 +28,7 @@ export default function MyVideo() {
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {videos.map((video) => (
-            <div
-              key={video.id}
-              onClick={() => handleVideoClick(video.id)}
-              className="cursor-pointer"
-            >
-              <Video {...video} isMyVideo={true} />
-            </div>
+            <Video key={video.id} {...video} isMyVideo={true} />
           ))}
         </div>
       )}

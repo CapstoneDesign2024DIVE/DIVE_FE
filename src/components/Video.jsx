@@ -16,11 +16,33 @@ export default function Video({
   ...videoData
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [thumbnailError, setThumbnailError] = useState(false);
+  const [profileError, setProfileError] = useState(false);
   const formattedDate = formatDate(createdAt);
 
   const handleMenuClick = (e) => {
     e.preventDefault();
     setIsModalOpen(true);
+  };
+
+  const handleThumbnailError = () => {
+    setThumbnailError(true);
+  };
+
+  const handleProfileError = () => {
+    setProfileError(true);
+  };
+
+  const getThumbnailUrl = (url) => {
+    if (!url || thumbnailError) return "/default-thumbnail.png";
+    if (url.startsWith("http")) return url;
+    return `https://du9fwrg5k8ff9.cloudfront.net/${url}`;
+  };
+
+  const getProfileUrl = (url) => {
+    if (!url || profileError) return "/default-profile.png";
+    if (url.startsWith("http")) return url;
+    return `https://du9fwrg5k8ff9.cloudfront.net/${url}`;
   };
 
   return (
@@ -31,16 +53,18 @@ export default function Video({
       >
         <div className="relative aspect-video w-full overflow-hidden rounded-xl">
           <img
-            src={thumbnail || "/default-thumbnail.png"}
+            src={getThumbnailUrl(thumbnail)}
             alt={question}
             className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
+            onError={handleThumbnailError}
           />
         </div>
         <div className="flex gap-3 px-1 pt-3">
           <img
-            src={imageUrl || "/default-profile.png"}
+            src={getProfileUrl(imageUrl)}
             alt={nickname}
             className="h-9 w-9 rounded-full object-cover"
+            onError={handleProfileError}
           />
           <div className="flex flex-1 flex-col">
             <div className="flex items-center justify-between gap-1">
