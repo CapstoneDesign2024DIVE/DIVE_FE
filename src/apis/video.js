@@ -51,17 +51,11 @@ export const completeUpload = async (questionId, videoKey, isOpen) => {
 };
 
 export const updateVideoVisibility = async (videoId, isOpen) => {
-  if (!videoId) {
-    throw new Error("Video ID is required");
-  }
-
-  const response = await api.put(`/video/${videoId}/change/visibility`, {
-    isOpen,
-  });
+  const response = await api.put(`/video/${videoId}/change/visibility`, isOpen);
   return response.data;
 };
 
 export const deleteVideo = async (videoId) => {
-  const response = await api.delete(`/video/${videoId}`);
+  const response = await api.delete(`/video/${videoId}/delete`);
   return response.data;
 };
