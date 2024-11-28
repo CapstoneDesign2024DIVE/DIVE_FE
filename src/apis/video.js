@@ -9,22 +9,12 @@ export const getAllVideos = async (sortOrder) => {
 
 export const getMyVideos = async () => {
   const response = await api.get("/video/myVideos");
-  return response.data.map((video) => ({
-    ...video,
-    id: video.videoName.split("_")[0], // timestamp를 id로 사용
-    isOpen: video.open, // open -> isOpen 변경
-    views: 0, // 기본 조회수 추가
-  }));
+  return response.data;
 };
 
 export const getVideoById = async (videoId) => {
   const response = await api.get(`/video/${videoId}`);
-  return {
-    ...response.data,
-    id: response.data.videoName.split("_")[0],
-    isOpen: response.data.open,
-    views: 0,
-  };
+  return response.data;
 };
 
 export const getPresignedUrl = async (questionId) => {
