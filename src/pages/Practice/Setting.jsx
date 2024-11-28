@@ -22,11 +22,13 @@ export default function SettingPage() {
 
   const getDevices = async () => {
     try {
-      await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      stream.getTracks().forEach((track) => track.stop());
 
       const devices = await navigator.mediaDevices.enumerateDevices();
-      console.log("Available devices:", devices); // 사용 가능한 장치 확인
-      console.log("Selected devices:", selectedDevices); // 선택된 장치 확인
       const videoDevices = devices.filter(
         (device) => device.kind === "videoinput",
       );
@@ -34,24 +36,18 @@ export default function SettingPage() {
         (device) => device.kind === "audioinput",
       );
 
-      setDevices({
-        videoDevices,
-        audioDevices,
-      });
+      setDevices({ videoDevices, audioDevices });
 
       if (videoDevices.length > 0 && audioDevices.length > 0) {
-        setSelectedDevices({
+        const initialDevices = {
           videoDeviceId: videoDevices[0].deviceId,
           audioDeviceId: audioDevices[0].deviceId,
-        });
+        };
+        console.log("Initial devices:", initialDevices);
+        setSelectedDevices(initialDevices);
       }
     } catch (err) {
-      console.error("Device Error:", {
-        name: err.name,
-        message: err.message,
-        constraints: err.constraints,
-        stack: err.stack,
-      });
+      console.error(err);
       setError(`장치 접근 오류: ${err.name} - ${err.message}`);
     }
   };
