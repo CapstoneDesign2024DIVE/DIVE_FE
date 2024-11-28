@@ -25,6 +25,8 @@ export default function SettingPage() {
       await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
 
       const devices = await navigator.mediaDevices.enumerateDevices();
+      console.log("Available devices:", devices); // 사용 가능한 장치 확인
+      console.log("Selected devices:", selectedDevices); // 선택된 장치 확인
       const videoDevices = devices.filter(
         (device) => device.kind === "videoinput",
       );
@@ -44,9 +46,13 @@ export default function SettingPage() {
         });
       }
     } catch (err) {
-      console.error("Device Error:", err.name, err.message, err);
-      setError("카메라/마이크 접근 권한이 필요합니다.");
-      console.error(err);
+      console.error("Device Error:", {
+        name: err.name,
+        message: err.message,
+        constraints: err.constraints,
+        stack: err.stack,
+      });
+      setError(`장치 접근 오류: ${err.name} - ${err.message}`);
     }
   };
 
@@ -122,7 +128,6 @@ export default function SettingPage() {
         selectedSet,
         selectedQuestions,
         selectedDevices,
-        stream,
       },
     });
   };
