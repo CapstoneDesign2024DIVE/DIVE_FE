@@ -223,6 +223,7 @@ export default function SelectQuestionPage() {
           onOverlayClick={(e) =>
             handleOverlayClick(e, () => setIsQuestionItemAddModalOpen(false))
           }
+          setId={selectedSetId}
         />
       )}
 

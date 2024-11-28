@@ -1,13 +1,8 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 
 export default function SettingPage() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { selectedSet, selectedQuestions } = location.state || {};
   const videoRef = useRef(null);
-
   const [devices, setDevices] = useState({
     videoDevices: [],
     audioDevices: [],
@@ -24,7 +19,6 @@ export default function SettingPage() {
   const getDevices = async () => {
     try {
       await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-
       const devices = await navigator.mediaDevices.enumerateDevices();
       const videoDevices = devices.filter(
         (device) => device.kind === "videoinput",
@@ -33,11 +27,7 @@ export default function SettingPage() {
         (device) => device.kind === "audioinput",
       );
 
-      setDevices({
-        videoDevices,
-        audioDevices,
-      });
-
+      setDevices({ videoDevices, audioDevices });
       if (videoDevices.length > 0 && audioDevices.length > 0) {
         setSelectedDevices({
           videoDeviceId: videoDevices[0].deviceId,
@@ -47,51 +37,60 @@ export default function SettingPage() {
     } catch (err) {
       setError("카메라/마이크 접근 권한이 필요합니다.");
       setIsDevicesActive(false);
-      console.error(err);
     }
   };
 
-  const getStream = async () => {
-    try {
-      setIsLoading(true);
-      setError("");
-
+  useEffect(() => {
+    getDevices();
+    return () => {
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
       }
+    };
+  }, []);
 
-      const newStream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          deviceId: selectedDevices.videoDeviceId
-            ? { exact: selectedDevices.videoDeviceId }
-            : undefined,
-          width: { ideal: 1920 },
-          height: { ideal: 1080 },
-        },
-        audio: {
-          deviceId: selectedDevices.audioDeviceId
-            ? { exact: selectedDevices.audioDeviceId }
-            : undefined,
-        },
-      });
+  useEffect(() => {
+    const getStream = async () => {
+      try {
+        setIsLoading(true);
+        setError("");
 
-      const allTracksActive = newStream
-        .getTracks()
-        .every((track) => track.enabled && track.readyState === "live");
-      setIsDevicesActive(allTracksActive);
+        if (stream) {
+          stream.getTracks().forEach((track) => track.stop());
+        }
 
-      setStream(newStream);
-      if (videoRef.current) {
-        videoRef.current.srcObject = newStream;
+        const newStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            deviceId: selectedDevices.videoDeviceId
+              ? { exact: selectedDevices.videoDeviceId }
+              : undefined,
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+          },
+          audio: {
+            deviceId: selectedDevices.audioDeviceId
+              ? { exact: selectedDevices.audioDeviceId }
+              : undefined,
+          },
+        });
+
+        setIsDevicesActive(true);
+        setStream(newStream);
+        if (videoRef.current) {
+          videoRef.current.srcObject = newStream;
+        }
+      } catch (err) {
+        setError("카메라/마이크 접근에 실패했습니다. 권한을 확인해주세요.");
+        setIsDevicesActive(false);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (err) {
-      setError("카메라/마이크 접근에 실패했습니다. 권한을 확인해주세요.");
-      setIsDevicesActive(false);
-      console.error(err);
-    } finally {
-      setIsLoading(false);
+    };
+
+    if (selectedDevices.videoDeviceId || selectedDevices.audioDeviceId) {
+      getStream();
     }
-  };
+  }, [selectedDevices]);
 
   const handleDeviceChange = (type, deviceId) => {
     setSelectedDevices((prev) => ({
@@ -100,71 +99,19 @@ export default function SettingPage() {
     }));
   };
 
-  useEffect(() => {
-    if (!selectedSet || !selectedQuestions) {
-      navigate("/select-question");
-      return;
-    }
-    getDevices();
-  }, []);
-
-  useEffect(() => {
-    if (selectedDevices.videoDeviceId || selectedDevices.audioDeviceId) {
-      getStream();
-    }
-  }, [selectedDevices]);
-
-  useEffect(() => {
-    return () => {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
-    };
-  }, [stream]);
-
-  const handlePrevious = () => {
-    if (stream) {
-      stream.getTracks().forEach((track) => track.stop());
-    }
-    navigate(-1);
-  };
-
-  const handleNext = () => {
-    if (!selectedSet || !selectedQuestions || selectedQuestions.length === 0) {
-      alert("선택된 질문이 없습니다.");
-      return;
-    }
-
-    if (!isDevicesActive) {
-      alert("카메라와 마이크가 정상적으로 활성화되어야 합니다.");
-      return;
-    }
-
-    navigate("/interview", {
-      state: {
-        selectedSet,
-        selectedQuestions,
-        selectedDevices,
-      },
-    });
-  };
-
   return (
-    <div className="flex h-[calc(100vh-48px)] w-[calc(100vw-256px)] overflow-hidden">
+    <div className="flex h-screen w-full overflow-hidden">
       <div className="flex w-full flex-col overflow-hidden">
         <div className="sticky top-0 z-10 flex items-center justify-between bg-white p-4">
           <div className="flex items-center gap-2">
-            <button
-              onClick={handlePrevious}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"
-            >
+            <button className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100">
               <IoMdArrowBack size={20} />
             </button>
             <h2 className="font-bold text-2xl">카메라/마이크 설정</h2>
           </div>
         </div>
 
-        <div className="flex h-[calc(100vh-192px)] w-full items-center justify-center overflow-y-auto bg-gray-100">
+        <div className="flex h-full w-full items-center justify-center bg-gray-100 p-6">
           <div className="flex w-1/2 flex-col items-center space-y-6">
             <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-black shadow-xl">
               {isLoading ? (
@@ -238,7 +185,6 @@ export default function SettingPage() {
 
         <div className="flex justify-end border-t p-4">
           <button
-            onClick={handleNext}
             disabled={!isDevicesActive || !!error || isLoading}
             className={`rounded-lg px-4 py-2 text-white ${
               isDevicesActive && !error && !isLoading
