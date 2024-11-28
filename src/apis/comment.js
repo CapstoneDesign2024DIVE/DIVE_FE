@@ -2,6 +2,7 @@ import api from "./axios";
 
 export const getComments = async (videoId) => {
   const response = await api.get(`/comment/${videoId}`);
+  console.log(response.data);
   return response.data;
 };
 
