@@ -8,12 +8,12 @@ export default function VideoModal({ isOpen, onClose, onOverlayClick, video }) {
 
   const handleEdit = async () => {
     try {
-      if (!video?.id) {
+      if (!video?.videoId) {
         throw new Error("Video ID is required");
       }
 
       await updateVisibility.mutateAsync({
-        videoId: video.id,
+        videoId: video.videoId,
         isOpen: isPublic,
       });
       onClose();
@@ -25,7 +25,7 @@ export default function VideoModal({ isOpen, onClose, onOverlayClick, video }) {
   const handleDelete = async () => {
     if (window.confirm("정말로 이 영상을 삭제하시겠습니까?")) {
       try {
-        await deleteVideo.mutateAsync(video.id);
+        await deleteVideo.mutateAsync(video.videoId);
         onClose();
       } catch (error) {
         console.error("비디오 삭제 실패:", error);

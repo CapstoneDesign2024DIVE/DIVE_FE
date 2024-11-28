@@ -5,7 +5,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import VideoModal from "@components/VideoModal";
 
 export default function Video({
-  id,
+  videoId,
   nickname,
   imageUrl,
   thumbnail,
@@ -26,7 +26,7 @@ export default function Video({
   return (
     <>
       <Link
-        to={`/videos/${id}`}
+        to={`/videos/${videoId}`}
         className="group flex w-full flex-col overflow-hidden transition-transform duration-200 hover:-translate-y-1"
       >
         <div className="relative aspect-video w-full overflow-hidden rounded-xl">
@@ -72,7 +72,7 @@ export default function Video({
         onClose={() => setIsModalOpen(false)}
         onOverlayClick={() => setIsModalOpen(false)}
         video={{
-          id,
+          videoId,
           nickname,
           imgSrc: imageUrl,
           thumbnail,
