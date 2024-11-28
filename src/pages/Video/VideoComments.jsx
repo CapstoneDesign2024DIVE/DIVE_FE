@@ -45,11 +45,14 @@ const VideoComments = ({ videoId, currentUser }) => {
       const content = editContents[comment.commentId];
       if (!content || !content.trim()) return;
 
-      await updateCommentMutation.mutateAsync({
-        videoId,
-        commentId: comment.commentId,
-        contents: content,
-      });
+      const oldData = queryClient.getQueryData(["comments", videoId]);
+      queryClient.setQueryData(["comments", videoId], (old) =>
+        old.map((c) =>
+          c.commentId === comment.commentId
+            ? { ...c, contents: content.trim() }
+            : c,
+        ),
+      );
 
       setEditingId(null);
       setEditContents((prev) => {
@@ -57,6 +60,17 @@ const VideoComments = ({ videoId, currentUser }) => {
         delete newState[comment.commentId];
         return newState;
       });
+
+      await updateCommentMutation
+        .mutateAsync({
+          videoId,
+          commentId: comment.commentId,
+          contents: content,
+        })
+        .catch((error) => {
+          queryClient.setQueryData(["comments", videoId], oldData);
+          throw error;
+        });
     } catch (error) {
       console.error("Failed to update comment:", error);
       alert("댓글 수정에 실패했습니다.");
