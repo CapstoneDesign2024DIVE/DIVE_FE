@@ -40,7 +40,7 @@ export const uploadToS3 = async (presignedUrl, videoFile) => {
 
 export const completeUpload = async (questionId, videoKey, isOpen) => {
   console.log("Complete upload params:", { questionId, videoKey, isOpen });
-  const response = await axios.post("/video/complete-upload", {
+  const response = await api.post("/video/complete-upload", {
     questionId,
     videoKey,
     isOpen,

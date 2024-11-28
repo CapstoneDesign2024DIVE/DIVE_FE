@@ -7,6 +7,7 @@ export default function SettingPage() {
   const navigate = useNavigate();
   const { selectedSet, selectedQuestions } = location.state || {};
   const videoRef = useRef(null);
+  서;
 
   const [devices, setDevices] = useState({
     videoDevices: [],
@@ -106,9 +107,13 @@ export default function SettingPage() {
   }, []);
 
   useEffect(() => {
-    if (selectedDevices.videoDeviceId || selectedDevices.audioDeviceId) {
+    if (selectedDevices.videoDeviceId && selectedDevices.audioDeviceId) {
       getStream();
     }
+  }, [selectedDevices]);
+
+  useEffect(() => {
+    console.log("Current devices:", selectedDevices);
   }, [selectedDevices]);
 
   const handlePrevious = () => {
