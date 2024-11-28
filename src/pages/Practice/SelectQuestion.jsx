@@ -176,6 +176,7 @@ export default function SelectQuestionPage() {
                 {selectedSet.questions.map((question) => (
                   <QuestionItem
                     key={question.id}
+                    setId={selectedSetId}
                     question={question}
                     selectedQuestions={selectedQuestions}
                     onToggleSelect={handleQuestionToggle}
