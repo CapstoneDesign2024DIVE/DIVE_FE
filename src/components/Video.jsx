@@ -23,11 +23,6 @@ export default function Video({
     setIsModalOpen(true);
   };
 
-  const formatUrl = (url, defaultUrl) => {
-    if (!url) return defaultUrl;
-    return url.replace("https//", "");
-  };
-
   return (
     <>
       <Link
@@ -36,7 +31,7 @@ export default function Video({
       >
         <div className="relative aspect-video w-full overflow-hidden rounded-xl">
           <img
-            src={formatUrl(thumbnail, "/default-thumbnail.png")}
+            src={thumbnail || "/default-thumbnail.png"}
             alt={question}
             className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
           />
