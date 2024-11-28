@@ -16,12 +16,9 @@ export const getVideoById = async (videoId) => {
   return response.data;
 };
 
-export const getPresignedUrl = async (questionId, isOpen) => {
+export const getPresignedUrl = async (questionId) => {
   const response = await api.get("/video/presigned", {
-    params: {
-      questionId,
-      isOpen,
-    },
+    params: { questionId },
   });
   return response.data;
 };
@@ -41,10 +38,11 @@ export const uploadToS3 = async (presignedUrl, videoFile) => {
   }
 };
 
-export const completeUpload = async (questionId, videoUrl) => {
+export const completeUpload = async (questionId, videoUrl, isOpen) => {
   const response = await api.post("/video/complete-upload", {
     questionId,
     videoUrl,
+    isOpen,
   });
   return response.data;
 };
