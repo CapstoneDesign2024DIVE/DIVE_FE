@@ -6,6 +6,8 @@ import {
   getPresignedUrl,
   uploadToS3,
   completeUpload,
+  updateVideo,
+  deleteVideo,
 } from "@apis/video";
 
 export const useGetAllVideos = (sortOrder) => {
@@ -70,6 +72,29 @@ export const useUploadVideo = () => {
         throw error;
       }
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["videos"] });
+    },
+  });
+};
+
+export const useUpdateVideo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateVideo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["videos"] });
+      queryClient.invalidateQueries({ queryKey: ["video"] });
+    },
+  });
+};
+
+export const useDeleteVideo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteVideo,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["videos"] });
     },

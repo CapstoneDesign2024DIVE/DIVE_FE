@@ -1,26 +1,33 @@
-// import { useUpdateVideo, useDeleteVideo } from "@hooks/useVideo";
+import { useUpdateVideo, useDeleteVideo } from "@hooks/useVideo";
 import { useState } from "react";
 
 export default function VideoModal({ isOpen, onClose, onOverlayClick, video }) {
-  // const updateVideo = useUpdateVideo();
-  // const deleteVideo = useDeleteVideo();
-  const [isPublic, setIsPublic] = useState(video?.open);
+  const updateVideo = useUpdateVideo();
+  const deleteVideo = useDeleteVideo();
+  const [isPublic, setIsPublic] = useState(video?.isOpen);
 
-  const handleEdit = () => {
-    // updateVideo.mutate({
-    //   videoId: video.id,
-    //   changes: {
-    //     ...video,
-    //     open: isPublic,
-    //   },
-    // });
-    onClose();
+  const handleEdit = async () => {
+    try {
+      await updateVideo.mutateAsync({
+        videoId: video.id,
+        changes: {
+          open: isPublic,
+        },
+      });
+      onClose();
+    } catch (error) {
+      console.error("비디오 수정 실패:", error);
+    }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (window.confirm("정말로 이 영상을 삭제하시겠습니까?")) {
-      // deleteVideo.mutate(video.id);
-      onClose();
+      try {
+        await deleteVideo.mutateAsync(video.id);
+        onClose();
+      } catch (error) {
+        console.error("비디오 삭제 실패:", error);
+      }
     }
   };
 
@@ -28,7 +35,7 @@ export default function VideoModal({ isOpen, onClose, onOverlayClick, video }) {
 
   return (
     <div
-      className="fixed left-0 top-0 z-[100] flex h-screen w-screen items-center justify-center bg-transparent"
+      className="fixed left-0 top-0 z-[100] flex h-screen w-screen items-center justify-center bg-black bg-opacity-50"
       onClick={onOverlayClick}
     >
       <div
@@ -61,12 +68,14 @@ export default function VideoModal({ isOpen, onClose, onOverlayClick, video }) {
             <button
               onClick={handleEdit}
               className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600"
+              disabled={updateVideo.isPending}
             >
               적용
             </button>
             <button
               onClick={handleDelete}
               className="rounded-lg bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600"
+              disabled={deleteVideo.isPending}
             >
               삭제
             </button>

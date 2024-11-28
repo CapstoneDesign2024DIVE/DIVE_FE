@@ -6,6 +6,7 @@ export const getAllVideos = async (sortOrder) => {
   });
   return response.data;
 };
+
 export const getMyVideos = async () => {
   const response = await api.get("/video/myVideos");
   return response.data;
@@ -45,5 +46,17 @@ export const completeUpload = async (questionId, videoKey, isOpen) => {
     videoKey,
     isOpen,
   });
+  return response.data;
+};
+
+export const updateVideo = async ({ videoId, changes }) => {
+  const response = await api.patch(`/video/${videoId}`, {
+    isOpen: changes.open,
+  });
+  return response.data;
+};
+
+export const deleteVideo = async (videoId) => {
+  const response = await api.delete(`/video/${videoId}`);
   return response.data;
 };
