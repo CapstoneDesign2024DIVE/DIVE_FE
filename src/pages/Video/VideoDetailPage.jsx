@@ -67,7 +67,7 @@ export default function VideoDetailPage() {
       </div>
 
       <VideoComments
-        videoId={id}
+        videoId={video.videoId}
         currentUser={{
           id: userInfo?.id,
           imageUrl: userInfo?.imageUrl,

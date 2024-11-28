@@ -41,19 +41,19 @@ const VideoComments = ({ videoId, currentUser }) => {
 
   const handleUpdate = async (comment) => {
     try {
-      const content = editContents[comment.id];
+      const content = editContents[comment.commentId];
       if (!content || !content.trim()) return;
 
       await updateCommentMutation.mutateAsync({
         videoId,
-        commentId: comment.id,
+        commentId: comment.commentId,
         contents: content,
       });
 
       setEditingId(null);
       setEditContents((prev) => {
         const newState = { ...prev };
-        delete newState[comment.id];
+        delete newState[comment.commentId];
         return newState;
       });
     } catch (error) {
@@ -68,7 +68,7 @@ const VideoComments = ({ videoId, currentUser }) => {
 
       await deleteCommentMutation.mutateAsync({
         videoId,
-        commentId: comment.id,
+        commentId: comment.commentId,
       });
     } catch (error) {
       console.error("Failed to delete comment:", error);
@@ -77,10 +77,10 @@ const VideoComments = ({ videoId, currentUser }) => {
   };
 
   const startEditing = (comment) => {
-    setEditingId(comment.id);
+    setEditingId(comment.commentId);
     setEditContents({
       ...editContents,
-      [comment.id]: comment.contents,
+      [comment.commentId]: comment.contents,
     });
   };
 
@@ -123,7 +123,7 @@ const VideoComments = ({ videoId, currentUser }) => {
           </div>
         ) : (
           comments.map((comment) => (
-            <div key={comment.id} className="flex gap-3">
+            <div key={comment.commentId} className="flex gap-3">
               <img
                 src={comment.imageUrl || "/default-profile.png"}
                 alt="프로필"
@@ -137,15 +137,15 @@ const VideoComments = ({ videoId, currentUser }) => {
                   </span>
                 </div>
 
-                {editingId === comment.id ? (
+                {editingId === comment.commentId ? (
                   <div className="mt-2 flex gap-2">
                     <input
                       type="text"
-                      value={editContents[comment.id] || ""}
+                      value={editContents[comment.commentId] || ""}
                       onChange={(e) =>
                         setEditContents((prev) => ({
                           ...prev,
-                          [comment.id]: e.target.value,
+                          [comment.commentId]: e.target.value,
                         }))
                       }
                       className="flex-1 rounded-lg border border-gray-200 p-2 focus:border-blue-500 focus:outline-none"
@@ -162,7 +162,7 @@ const VideoComments = ({ videoId, currentUser }) => {
                         setEditingId(null);
                         setEditContents((prev) => {
                           const newState = { ...prev };
-                          delete newState[comment.id];
+                          delete newState[comment.commentId];
                           return newState;
                         });
                       }}
@@ -177,32 +177,33 @@ const VideoComments = ({ videoId, currentUser }) => {
                 )}
 
                 <div className="mt-2 flex gap-4 text-sm text-gray-500">
-                  {currentUser?.id === comment.userId && !editingId && (
-                    <>
-                      <button
-                        onClick={() => startEditing(comment)}
-                        className="hover:text-gray-900"
-                        disabled={
-                          updateCommentMutation.isPending ||
-                          deleteCommentMutation.isPending
-                        }
-                      >
-                        수정
-                      </button>
-                      <button
-                        onClick={() => handleDelete(comment)}
-                        className="hover:text-gray-900"
-                        disabled={
-                          updateCommentMutation.isPending ||
-                          deleteCommentMutation.isPending
-                        }
-                      >
-                        {deleteCommentMutation.isPending
-                          ? "삭제 중..."
-                          : "삭제"}
-                      </button>
-                    </>
-                  )}
+                  {currentUser?.id === comment.userId &&
+                    comment.id !== editingId && (
+                      <>
+                        <button
+                          onClick={() => startEditing(comment)}
+                          className="hover:text-gray-900"
+                          disabled={
+                            updateCommentMutation.isPending ||
+                            deleteCommentMutation.isPending
+                          }
+                        >
+                          수정
+                        </button>
+                        <button
+                          onClick={() => handleDelete(comment)}
+                          className="hover:text-gray-900"
+                          disabled={
+                            updateCommentMutation.isPending ||
+                            deleteCommentMutation.isPending
+                          }
+                        >
+                          {deleteCommentMutation.isPending
+                            ? "삭제 중..."
+                            : "삭제"}
+                        </button>
+                      </>
+                    )}
                 </div>
               </div>
             </div>
