@@ -9,6 +9,7 @@ export const getAllVideos = async (sortOrder) => {
 
 export const getMyVideos = async () => {
   const response = await api.get("/video/myVideos");
+  console.log(response.data);
   return response.data;
 };
 
