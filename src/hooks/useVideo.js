@@ -6,7 +6,7 @@ import {
   getPresignedUrl,
   uploadToS3,
   completeUpload,
-  updateVideo,
+  updateVideoVisibility,
   deleteVideo,
 } from "@apis/video";
 
