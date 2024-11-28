@@ -7,7 +7,7 @@ import VideoComments from "./VideoComments";
 
 export default function VideoDetailPage() {
   const { id } = useParams();
-  const { data: video, isLoading } = useGetVideo(Number(id));
+  const { data: video, isLoading } = useGetVideo(id);
   const { userInfo } = useAuthStore();
 
   if (isLoading) {
