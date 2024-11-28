@@ -66,7 +66,7 @@ export default function VideoModal({ isOpen, onClose, onOverlayClick, video }) {
             <button
               onClick={handleEdit}
               className="rounded-lg bg-indigo-500 px-4 py-2 font-medium text-white hover:bg-indigo-600"
-              disabled={updateVideo.isPending}
+              disabled={updateVisibility.isPending}
             >
               적용
             </button>
