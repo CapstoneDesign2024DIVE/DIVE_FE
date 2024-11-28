@@ -12,6 +12,7 @@ const VideoComments = ({ videoId, currentUser }) => {
   const [newComment, setNewComment] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [editContents, setEditContents] = useState({});
+  const [deletingIds, setDeletingIds] = useState(new Set());
 
   const { data: comments = [], isLoading } = useQuery({
     queryKey: ["comments", videoId],
@@ -66,13 +67,26 @@ const VideoComments = ({ videoId, currentUser }) => {
     try {
       if (!window.confirm("댓글을 삭제하시겠습니까?")) return;
 
+      setDeletingIds((prev) => new Set([...prev, comment.commentId]));
+
       await deleteCommentMutation.mutateAsync({
         videoId,
         commentId: comment.commentId,
       });
+
+      setDeletingIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(comment.commentId);
+        return newSet;
+      });
     } catch (error) {
       console.error("Failed to delete comment:", error);
       alert("댓글 삭제에 실패했습니다.");
+      setDeletingIds((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(comment.commentId);
+        return newSet;
+      });
     }
   };
 
@@ -178,27 +192,21 @@ const VideoComments = ({ videoId, currentUser }) => {
 
                 <div className="mt-2 flex gap-4 text-sm text-gray-500">
                   {currentUser?.id === comment.userId &&
-                    comment.id !== editingId && (
+                    comment.commentId !== editingId && (
                       <>
                         <button
                           onClick={() => startEditing(comment)}
                           className="hover:text-gray-900"
-                          disabled={
-                            updateCommentMutation.isPending ||
-                            deleteCommentMutation.isPending
-                          }
+                          disabled={deletingIds.has(comment.commentId)}
                         >
                           수정
                         </button>
                         <button
                           onClick={() => handleDelete(comment)}
                           className="hover:text-gray-900"
-                          disabled={
-                            updateCommentMutation.isPending ||
-                            deleteCommentMutation.isPending
-                          }
+                          disabled={deletingIds.has(comment.commentId)}
                         >
-                          {deleteCommentMutation.isPending
+                          {deletingIds.has(comment.commentId)
                             ? "삭제 중..."
                             : "삭제"}
                         </button>
