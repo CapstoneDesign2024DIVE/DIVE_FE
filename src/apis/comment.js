@@ -6,7 +6,11 @@ export const getComments = async (videoId) => {
 };
 
 export const createComment = async ({ videoId, contents }) => {
-  const response = await api.post(`/comment/${videoId}/create`, contents);
+  const response = await api.post(`/comment/${videoId}/create`, contents, {
+    headers: {
+      "Content-Type": "text/plain",
+    },
+  });
   return response.data;
 };
 
