@@ -36,14 +36,14 @@ export default function Video({
       >
         <div className="relative aspect-video w-full overflow-hidden rounded-xl">
           <img
-            src={thumbnail || "/default-thumbnail.png"}
+            src={formatUrl(thumbnail, "/default-thumbnail.png")}
             alt={question}
             className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
           />
         </div>
         <div className="flex gap-3 px-1 pt-3">
           <img
-            src={formatUrl(thumbnail, "/default-thumbnail.png")}
+            src={imageUrl || "/default-profile.png"}
             alt={nickname}
             className="h-9 w-9 rounded-full object-cover"
           />
