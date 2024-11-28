@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { formatDate } from "@utils/dateFormat";
 import {
   useCreateComment,
@@ -11,7 +11,7 @@ import { getComments } from "@apis/comment";
 const VideoComments = ({ videoId, currentUser }) => {
   const [newComment, setNewComment] = useState("");
   const [editingId, setEditingId] = useState(null);
-  const [editContent, setEditContent] = useState("");
+  const [editContents, setEditContents] = useState({});
 
   const { data: comments = [], isLoading } = useQuery({
     queryKey: ["comments", videoId],
@@ -39,31 +39,36 @@ const VideoComments = ({ videoId, currentUser }) => {
     }
   };
 
-  const handleUpdate = async (commentId) => {
+  const handleUpdate = async (comment) => {
     try {
-      if (!editContent.trim()) return;
+      const content = editContents[comment.id];
+      if (!content || !content.trim()) return;
 
       await updateCommentMutation.mutateAsync({
         videoId,
-        commentId,
-        contents: editContent,
+        commentId: comment.id,
+        contents: content,
       });
 
       setEditingId(null);
-      setEditContent("");
+      setEditContents((prev) => {
+        const newState = { ...prev };
+        delete newState[comment.id];
+        return newState;
+      });
     } catch (error) {
       console.error("Failed to update comment:", error);
       alert("댓글 수정에 실패했습니다.");
     }
   };
 
-  const handleDelete = async (commentId) => {
+  const handleDelete = async (comment) => {
     try {
       if (!window.confirm("댓글을 삭제하시겠습니까?")) return;
 
       await deleteCommentMutation.mutateAsync({
         videoId,
-        commentId,
+        commentId: comment.id,
       });
     } catch (error) {
       console.error("Failed to delete comment:", error);
@@ -73,7 +78,10 @@ const VideoComments = ({ videoId, currentUser }) => {
 
   const startEditing = (comment) => {
     setEditingId(comment.id);
-    setEditContent(comment.contents);
+    setEditContents({
+      ...editContents,
+      [comment.id]: comment.contents,
+    });
   };
 
   return (
@@ -133,19 +141,31 @@ const VideoComments = ({ videoId, currentUser }) => {
                   <div className="mt-2 flex gap-2">
                     <input
                       type="text"
-                      value={editContent}
-                      onChange={(e) => setEditContent(e.target.value)}
+                      value={editContents[comment.id] || ""}
+                      onChange={(e) =>
+                        setEditContents((prev) => ({
+                          ...prev,
+                          [comment.id]: e.target.value,
+                        }))
+                      }
                       className="flex-1 rounded-lg border border-gray-200 p-2 focus:border-blue-500 focus:outline-none"
                     />
                     <button
-                      onClick={() => handleUpdate(comment.id)}
+                      onClick={() => handleUpdate(comment)}
                       disabled={updateCommentMutation.isPending}
                       className="rounded-lg bg-blue-500 px-3 py-1 text-white disabled:opacity-50"
                     >
                       {updateCommentMutation.isPending ? "수정 중..." : "수정"}
                     </button>
                     <button
-                      onClick={() => setEditingId(null)}
+                      onClick={() => {
+                        setEditingId(null);
+                        setEditContents((prev) => {
+                          const newState = { ...prev };
+                          delete newState[comment.id];
+                          return newState;
+                        });
+                      }}
                       disabled={updateCommentMutation.isPending}
                       className="rounded-lg bg-gray-200 px-3 py-1 disabled:opacity-50"
                     >
@@ -170,7 +190,7 @@ const VideoComments = ({ videoId, currentUser }) => {
                         수정
                       </button>
                       <button
-                        onClick={() => handleDelete(comment.id)}
+                        onClick={() => handleDelete(comment)}
                         className="hover:text-gray-900"
                         disabled={
                           updateCommentMutation.isPending ||
