@@ -46,7 +46,7 @@ export default function LandingPage() {
             <h1 className="mb-4 ml-8">DEEP DIVE 해요!</h1>
           </div>
         </section>
-        <section className="flex h-screen snap-start items-center justify-center">
+        {/* <section className="flex h-screen snap-start items-center justify-center">
           <h1 className="mb-7 font-bold text-3xl text-[#1D1D1F]">Second</h1>
         </section>
         <section className="flex h-screen snap-start items-center justify-center">
@@ -68,7 +68,7 @@ export default function LandingPage() {
               className="animate-bounce text-gray-800"
             />
           </div>
-        )}
+        )} */}
       </main>
     </div>
   );
