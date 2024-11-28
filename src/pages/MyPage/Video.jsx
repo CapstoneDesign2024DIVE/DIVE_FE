@@ -4,6 +4,9 @@ import Video from "@components/Video";
 export default function MyVideo() {
   const { data: videos, isLoading } = useGetMyVideos();
 
+  console.log(videos);
+  console.log(videos.id);
+
   if (isLoading) {
     return (
       <div className="p-4">

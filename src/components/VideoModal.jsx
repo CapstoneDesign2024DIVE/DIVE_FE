@@ -6,6 +6,8 @@ export default function VideoModal({ isOpen, onClose, onOverlayClick, video }) {
   const deleteVideo = useDeleteVideo();
   const [isPublic, setIsPublic] = useState(video?.isOpen);
 
+  console.log(video);
+
   const handleEdit = async () => {
     try {
       if (!video?.id) {
