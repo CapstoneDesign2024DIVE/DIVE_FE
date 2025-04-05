@@ -21,13 +21,8 @@ export function useNotification() {
 
     const baseUrl = import.meta.env.VITE_API_URL || "";
     const newEventSource = new EventSource(
-      `${baseUrl}/notification/subscribe`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        withCredentials: true,
-      },
+      `${baseUrl}/notification/subscribe?token=${encodeURIComponent(accessToken)}`,
+      { withCredentials: true },
     );
 
     newEventSource.onmessage = (event) => {
