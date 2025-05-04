@@ -4,10 +4,11 @@ import { formatDate } from "@utils/dateFormat";
 import { getCategoryStyle } from "@utils/categoryStyles";
 import useAuthStore from "@store/authStore";
 import VideoComments from "./VideoComments";
+import VideoFeedback from "./VideoFeedback";
 
 export default function VideoDetailPage() {
   const { id } = useParams();
-  const { data: video, isLoading } = useGetVideo(id);
+  const { data, isLoading } = useGetVideo(id);
   const { userInfo } = useAuthStore();
 
   if (isLoading) {
@@ -18,13 +19,15 @@ export default function VideoDetailPage() {
     );
   }
 
-  if (!video) {
+  if (!data || !data.video) {
     return (
       <div className="flex h-[calc(100vh-48px)] items-center justify-center">
         <div>영상을 찾을 수 없습니다.</div>
       </div>
     );
   }
+
+  const { video, feedback } = data;
 
   return (
     <div className="mx-auto min-h-[calc(100vh-48px)] max-w-4xl p-4">
@@ -65,6 +68,8 @@ export default function VideoDetailPage() {
           </div>
         </div>
       </div>
+
+      <VideoFeedback feedback={feedback} />
 
       <VideoComments
         videoId={video.videoId}
