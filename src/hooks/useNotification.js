@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { EventSourcePolyfill } from "event-source-polyfill";
 import useAuthStore from "@store/authStore";
 
 export function useNotification() {
@@ -20,9 +21,15 @@ export function useNotification() {
     }
 
     const baseUrl = import.meta.env.VITE_API_URL || "";
-    const newEventSource = new EventSource(
-      `${baseUrl}/notification/subscribe?token=${encodeURIComponent(accessToken)}`,
-      { withCredentials: true },
+
+    const newEventSource = new EventSourcePolyfill(
+      `${baseUrl}/notification/subscribe`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        withCredentials: true,
+      },
     );
 
     newEventSource.onmessage = (event) => {

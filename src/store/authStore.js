@@ -3,15 +3,14 @@ import { persist } from "zustand/middleware";
 
 const useAuthStore = create(
   persist(
-    (set) => ({
+    (set, get) => ({
       isAuthenticated: false,
       accessToken: null,
       refreshToken: null,
       key: null,
       userInfo: null,
+
       login: ({ accessToken, refreshToken, key }) => {
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
         set({
           isAuthenticated: true,
           accessToken,
@@ -19,10 +18,10 @@ const useAuthStore = create(
           key,
         });
       },
+
       setUserInfo: (userInfo) => set({ userInfo }),
+
       logout: () => {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
         set({
           isAuthenticated: false,
           accessToken: null,
@@ -31,12 +30,17 @@ const useAuthStore = create(
           userInfo: null,
         });
       },
+
+      getAccessToken: () => get().accessToken,
+      getRefreshToken: () => get().refreshToken,
     }),
     {
       name: "auth-storage",
       getStorage: () => localStorage,
       partialize: (state) => ({
         isAuthenticated: state.isAuthenticated,
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
         userInfo: state.userInfo,
         key: state.key,
       }),

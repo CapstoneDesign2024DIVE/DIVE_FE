@@ -11,7 +11,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = useAuthStore.getState().accessToken;
+    const token = useAuthStore.getState().getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -33,20 +33,21 @@ api.interceptors.response.use(
     ) {
       originalRequest._retry = true;
       try {
+        const refreshToken = useAuthStore.getState().getRefreshToken();
         const response = await axios.post("/api/auth/refresh", {
-          refreshToken: localStorage.getItem("refreshToken"),
+          refreshToken: refreshToken,
         });
 
-        const { accessToken, refreshToken } = response.data;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
+        const { accessToken, refreshToken: newRefreshToken } = response.data;
 
-        useAuthStore.getState().login({ accessToken, refreshToken });
+        useAuthStore.getState().login({
+          accessToken,
+          refreshToken: newRefreshToken,
+        });
+
         originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
         useAuthStore.getState().logout();
         return Promise.reject(refreshError);
       }
