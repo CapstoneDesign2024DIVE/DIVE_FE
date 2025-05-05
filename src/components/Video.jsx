@@ -23,6 +23,14 @@ export default function Video({
     setIsModalOpen(true);
   };
 
+  if (!videoId) {
+    console.warn("Video component received undefined videoId", {
+      nickname,
+      question,
+      videoData,
+    });
+  }
+
   return (
     <>
       <Link
