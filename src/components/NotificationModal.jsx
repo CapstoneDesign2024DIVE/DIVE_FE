@@ -7,8 +7,14 @@ export default function NotificationModal({ onClick }) {
   const handleNotificationClick = (notification) => {
     markAsRead(notification.id);
 
-    if (notification.data && notification.data.videoPath) {
+    if (
+      notification.type === "comment" &&
+      notification.data &&
+      notification.data.videoPath
+    ) {
       window.location.href = `${notification.data.videoPath}?comment=${notification.data.commentId}`;
+    } else if (notification.type === "video_upload" && notification.data) {
+      window.location.href = `/video/${notification.data.videoId}`;
     }
   };
 
@@ -44,6 +50,9 @@ export default function NotificationModal({ onClick }) {
                 <div className="flex-shrink-0">
                   {notification.type === "comment" && (
                     <span className="text-blue-500">💬</span>
+                  )}
+                  {notification.type === "video_upload" && (
+                    <span className="text-green-500">🎥</span>
                   )}
                 </div>
                 <div className="ml-3">

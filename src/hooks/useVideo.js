@@ -17,8 +17,6 @@ export const useGetAllVideos = (sortOrder) => {
     select: (data) => {
       if (!data) return [];
 
-      console.log("Raw video data from API:", data);
-
       const videosArray = Array.isArray(data)
         ? data
         : data.videos
@@ -34,8 +32,6 @@ export const useGetAllVideos = (sortOrder) => {
         }
         return item;
       });
-
-      console.log("Processed video data:", processedData);
 
       const sortedData = [...processedData].sort((a, b) => {
         switch (sortOrder) {
@@ -64,8 +60,6 @@ export const useGetMyVideos = () => {
     select: (data) => {
       if (!data) return [];
 
-      console.log("My videos raw data:", data);
-
       const processedData = Array.isArray(data)
         ? data.map((item) => {
             if (item.video && typeof item.video === "object") {
@@ -87,7 +81,6 @@ export const useGetVideo = (videoId) => {
   return useQuery({
     queryKey: ["video", videoId],
     queryFn: () => {
-      console.log("Fetching video with ID:", videoId);
       if (!videoId) {
         console.error("Attempted to fetch video with undefined ID");
         return Promise.reject(new Error("Video ID is required"));
@@ -113,10 +106,7 @@ export const useUploadVideo = () => {
   return useMutation({
     mutationFn: async ({ questionId, isOpen, videoBlob }) => {
       try {
-        console.log("Starting upload with questionId:", questionId);
-
         const presignedUrlResponse = await getPresignedUrl(questionId);
-        console.log("Presigned URL Response:", presignedUrlResponse);
 
         const { presignedUrl, videoKey } = presignedUrlResponse;
 

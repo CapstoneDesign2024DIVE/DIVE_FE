@@ -55,6 +55,37 @@ export function useNotification() {
       }
     };
 
+    newEventSource.addEventListener("video-processed", (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log("비디오 처리 완료 알림 수신:", data);
+
+        if (data && data.status === "COMPLETED") {
+          const notification = {
+            id: `video-${data.videoId}-${Date.now()}`,
+            type: "video_upload",
+            content: data.message || "비디오 처리가 완료되었습니다.",
+            time: new Date().toLocaleString(),
+            read: false,
+            data: {
+              videoId: data.videoId,
+              feedbackId: data.feedbackId,
+            },
+          };
+
+          setNotifications((prev) => [notification, ...prev]);
+
+          if (Notification.permission === "granted") {
+            new Notification("비디오 처리 완료", {
+              body: data.message || "비디오 처리가 완료되었습니다.",
+            });
+          }
+        }
+      } catch (error) {
+        console.error("비디오 알림 데이터 파싱 오류:", error);
+      }
+    });
+
     newEventSource.onerror = (error) => {
       console.error("SSE 연결 오류:", error);
 

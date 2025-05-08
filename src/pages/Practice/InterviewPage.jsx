@@ -169,31 +169,29 @@ export default function InterviewPage() {
         }
       };
 
-      mediaRecorder.onstop = async () => {
+      mediaRecorder.onstop = () => {
         try {
           if (chunksRef.current.length > 0) {
             const videoBlob = new Blob(chunksRef.current, {
               type: "video/webm",
             });
 
-            setIsUploading(true);
-            await uploadVideoMutation.mutateAsync({
+            uploadVideoMutation.mutate({
               questionId: currentQuestion.id,
               isOpen: false,
               videoBlob,
             });
-            setIsUploading(false);
 
             if (isLastQuestion) {
               setShowFinishModal(true);
             }
           }
         } catch (error) {
-          setError("영상 업로드에 실패했습니다.");
-          console.error("Upload failed:", error);
-          setIsUploading(false);
+          setError("영상 업로드 준비에 실패했습니다.");
+          console.error("Upload preparation failed:", error);
         } finally {
           chunksRef.current = [];
+          setIsUploading(false);
         }
       };
 
