@@ -322,6 +322,7 @@ export default function InterviewPage() {
         title="면접이 종료되었습니다"
       >
         <p>정말 수고하셨습니다🥳</p>
+        <p>잠시 기다리시면 AI 피드백이 제공됩니다🤖</p>
       </Modal>
     </div>
   );
