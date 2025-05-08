@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import useAuthStore from "@store/authStore";
 
@@ -6,6 +6,12 @@ export function useNotification() {
   const [notifications, setNotifications] = useState([]);
   const [eventSource, setEventSource] = useState(null);
   const accessToken = useAuthStore((state) => state.accessToken);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  const updateUnreadCount = useCallback((notifs) => {
+    const count = notifs.filter((notif) => !notif.read).length;
+    setUnreadCount(count);
+  }, []);
 
   useEffect(() => {
     if (!accessToken) {
@@ -48,7 +54,11 @@ export function useNotification() {
             data: data,
           };
 
-          setNotifications((prev) => [notification, ...prev]);
+          setNotifications((prev) => {
+            const newNotifications = [notification, ...prev];
+            updateUnreadCount(newNotifications);
+            return newNotifications;
+          });
         }
       } catch (error) {
         console.error("알림 데이터 파싱 오류:", error);
@@ -73,7 +83,11 @@ export function useNotification() {
             },
           };
 
-          setNotifications((prev) => [notification, ...prev]);
+          setNotifications((prev) => {
+            const newNotifications = [notification, ...prev];
+            updateUnreadCount(newNotifications);
+            return newNotifications;
+          });
 
           if (Notification.permission === "granted") {
             new Notification("비디오 처리 완료", {
@@ -101,7 +115,9 @@ export function useNotification() {
     const savedNotifications = localStorage.getItem("notifications");
     if (savedNotifications) {
       try {
-        setNotifications(JSON.parse(savedNotifications));
+        const parsedNotifications = JSON.parse(savedNotifications);
+        setNotifications(parsedNotifications);
+        updateUnreadCount(parsedNotifications);
       } catch (e) {
         console.error("저장된 알림 복원 오류:", e);
       }
@@ -112,38 +128,47 @@ export function useNotification() {
         newEventSource.close();
       }
     };
-  }, [accessToken]);
+  }, [accessToken, updateUnreadCount]);
 
   useEffect(() => {
     if (notifications.length > 0) {
       localStorage.setItem("notifications", JSON.stringify(notifications));
     }
-  }, [notifications]);
+    updateUnreadCount(notifications);
+  }, [notifications, updateUnreadCount]);
 
-  const markAsRead = (notificationId) => {
-    setNotifications((prev) =>
-      prev.map((notif) =>
+  const markAsRead = useCallback((notificationId) => {
+    setNotifications((prev) => {
+      const updatedNotifications = prev.map((notif) =>
         notif.id === notificationId ? { ...notif, read: true } : notif,
-      ),
-    );
-  };
+      );
+      return updatedNotifications;
+    });
+  }, []);
 
-  const markAllAsRead = () => {
-    setNotifications((prev) => prev.map((notif) => ({ ...notif, read: true })));
-  };
+  const markAllAsRead = useCallback(() => {
+    setNotifications((prev) => {
+      const updatedNotifications = prev.map((notif) => ({
+        ...notif,
+        read: true,
+      }));
+      return updatedNotifications;
+    });
+  }, []);
 
-  const unreadCount = notifications.filter((notif) => !notif.read).length;
+  const removeNotification = useCallback((notificationId) => {
+    setNotifications((prev) => {
+      const updatedNotifications = prev.filter(
+        (notif) => notif.id !== notificationId,
+      );
+      return updatedNotifications;
+    });
+  }, []);
 
-  const removeNotification = (notificationId) => {
-    setNotifications((prev) =>
-      prev.filter((notif) => notif.id !== notificationId),
-    );
-  };
-
-  const clearAllNotifications = () => {
+  const clearAllNotifications = useCallback(() => {
     setNotifications([]);
     localStorage.removeItem("notifications");
-  };
+  }, []);
 
   return {
     notifications,

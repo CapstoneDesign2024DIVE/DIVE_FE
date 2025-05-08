@@ -1,8 +1,13 @@
 import { useNotification } from "@hooks/useNotification";
 
 export default function NotificationModal({ onClick }) {
-  const { notifications, markAsRead, markAllAsRead, clearAllNotifications } =
-    useNotification();
+  const {
+    notifications,
+    markAsRead,
+    markAllAsRead,
+    removeNotification,
+    clearAllNotifications,
+  } = useNotification();
 
   const handleNotificationClick = (notification) => {
     markAsRead(notification.id);
@@ -16,6 +21,11 @@ export default function NotificationModal({ onClick }) {
     } else if (notification.type === "video_upload" && notification.data) {
       window.location.href = `/video/${notification.data.videoId}?feedback=${notification.data.feedbackId}`;
     }
+  };
+
+  const handleRemoveNotification = (e, notificationId) => {
+    e.stopPropagation();
+    removeNotification(notificationId);
   };
 
   return (
@@ -43,10 +53,14 @@ export default function NotificationModal({ onClick }) {
           notifications.map((notification) => (
             <div
               key={notification.id}
-              className={`cursor-pointer px-4 py-3 hover:bg-gray-50 ${notification.read ? "bg-gray-50 opacity-70" : ""}`}
+              className={`group relative cursor-pointer px-4 py-3 hover:bg-gray-50 ${
+                notification.read
+                  ? "bg-gray-50 opacity-70"
+                  : "border-l-2 border-blue-500"
+              }`}
               onClick={() => handleNotificationClick(notification)}
             >
-              <div className="flex items-center">
+              <div className="flex items-center pr-6">
                 <div className="flex-shrink-0">
                   {notification.type === "comment" && (
                     <span className="text-blue-500">💬</span>
@@ -61,6 +75,12 @@ export default function NotificationModal({ onClick }) {
                   </p>
                   <p className="text-xs text-gray-500">{notification.time}</p>
                 </div>
+                <button
+                  className="absolute right-3 top-3 hidden text-gray-400 hover:text-red-500 group-hover:block"
+                  onClick={(e) => handleRemoveNotification(e, notification.id)}
+                >
+                  ✕
+                </button>
               </div>
             </div>
           ))
