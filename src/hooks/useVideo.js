@@ -4,7 +4,7 @@ import {
   getMyVideos,
   getVideoById,
   getPresignedUrl,
-  uploadToS3WithProgress,
+  uploadToS3,
   completeUpload,
   updateVideoVisibility,
   deleteVideo,
