@@ -15,7 +15,6 @@ export default function InterviewPage() {
   const timerRef = useRef(null);
   const chunksRef = useRef([]);
   const uploadVideoMutation = useUploadVideo();
-
   const { selectedSet, selectedQuestions, selectedDevices } =
     location.state || {};
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
