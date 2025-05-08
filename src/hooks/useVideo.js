@@ -4,7 +4,7 @@ import {
   getMyVideos,
   getVideoById,
   getPresignedUrl,
-  uploadToS3,
+  uploadToS3WithProgress,
   completeUpload,
   updateVideoVisibility,
   deleteVideo,
@@ -117,7 +117,7 @@ export const useUploadVideo = () => {
         await uploadToS3(presignedUrl, videoFile);
         return await completeUpload(questionId, videoKey, isOpen);
       } catch (error) {
-        console.error("Upload error:", error);
+        console.error("업로드 오류:", error);
         throw error;
       }
     },

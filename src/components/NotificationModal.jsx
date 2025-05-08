@@ -14,7 +14,7 @@ export default function NotificationModal({ onClick }) {
     ) {
       window.location.href = `${notification.data.videoPath}?comment=${notification.data.commentId}`;
     } else if (notification.type === "video_upload" && notification.data) {
-      window.location.href = `/video/${notification.data.videoId}`;
+      window.location.href = `/video/${notification.data.videoId}?feedback=${notification.data.feedbackId}`;
     }
   };
 

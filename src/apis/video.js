@@ -35,13 +35,13 @@ export const uploadToS3 = async (presignedUrl, videoFile) => {
       },
     });
   } catch (error) {
-    console.error("S3 upload failed:", error);
+    console.error("S3 업로드 실패:", error);
     throw error;
   }
 };
 
 export const completeUpload = async (questionId, videoKey, isOpen) => {
-  console.log("Complete upload params:", { questionId, videoKey, isOpen });
+  console.log("업로드 완료 요청 파라미터:", { questionId, videoKey, isOpen });
   const response = await api.post("/video/complete-upload", {
     questionId,
     videoKey,

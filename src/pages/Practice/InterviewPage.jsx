@@ -175,11 +175,25 @@ export default function InterviewPage() {
               type: "video/webm",
             });
 
-            uploadVideoMutation.mutate({
-              questionId: currentQuestion.id,
-              isOpen: false,
-              videoBlob,
-            });
+            setIsUploading(true);
+            uploadVideoMutation.mutate(
+              {
+                questionId: currentQuestion.id,
+                isOpen: false,
+                videoBlob,
+              },
+              {
+                onSuccess: () => {
+                  console.log("Upload started successfully");
+                  setIsUploading(false);
+                },
+                onError: (error) => {
+                  console.error("Upload failed to start:", error);
+                  setIsUploading(false);
+                  setError("영상 업로드 시작에 실패했습니다.");
+                },
+              },
+            );
 
             if (isLastQuestion) {
               setShowFinishModal(true);
@@ -190,7 +204,6 @@ export default function InterviewPage() {
           console.error("Upload preparation failed:", error);
         } finally {
           chunksRef.current = [];
-          setIsUploading(false);
         }
       };
 
@@ -257,8 +270,8 @@ export default function InterviewPage() {
               )}
               {isUploading && (
                 <div className="flex items-center gap-2">
-                  <div className="h-2.5 w-2.5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                  <span className="font-medium text-sm">업로드중...</span>
+                  <div className="h-2.5 w-2.5 animate-pulse rounded-full bg-blue-500"></div>
+                  <span className="font-medium text-sm">업로드중</span>
                 </div>
               )}
             </div>
