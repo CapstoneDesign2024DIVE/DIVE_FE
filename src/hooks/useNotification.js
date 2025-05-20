@@ -100,6 +100,36 @@ export function useNotification() {
       }
     });
 
+    newEventSource.addEventListener("new-comment", (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log("새 댓글 알림 수신:", data);
+
+        const notification = {
+          id: `comment-${data.commentId}-${Date.now()}`,
+          type: "comment",
+          content: `${data.nickname || data.username}님이 '${data.videoName}' 영상에 댓글을 남겼습니다: ${data.contents.substring(0, 30)}${data.contents.length > 30 ? "..." : ""}`,
+          time: new Date().toLocaleString(),
+          read: false,
+          data: data,
+        };
+
+        setNotifications((prev) => {
+          const newNotifications = [notification, ...prev];
+          updateUnreadCount(newNotifications);
+          return newNotifications;
+        });
+
+        if (Notification.permission === "granted") {
+          new Notification("새 댓글", {
+            body: notification.content,
+          });
+        }
+      } catch (error) {
+        console.error("댓글 알림 데이터 파싱 오류:", error);
+      }
+    });
+
     newEventSource.onerror = (error) => {
       console.error("SSE 연결 오류:", error);
 
