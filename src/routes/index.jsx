@@ -7,7 +7,6 @@ import LandingPage from "@pages/Landing";
 import LoginPage from "@pages/Login";
 import LoginCallback from "@pages/Login/LoginCallback";
 import SignUpPage from "@pages/SignUp";
-import HomePage from "@pages/Home";
 import QuestionSetPage from "@pages/QuestionSet";
 import VideoPage from "@pages/Video";
 import SelectQuestionPage from "@pages/Practice/SelectQuestion";
@@ -23,9 +22,8 @@ const routes = [
   { path: "/", element: <LandingPage />, isPublic: true },
   { path: "/login", element: <LoginPage />, isPublic: true },
   { path: "/signup", element: <SignUpPage />, isPublic: true },
-  { path: "/videos", element: <HomePage />, isPublic: false },
-  { path: "/questionSets", element: <QuestionSetPage />, isPublic: false },
   { path: "/videos", element: <VideoPage />, isPublic: false },
+  { path: "/questionSets", element: <QuestionSetPage />, isPublic: false },
   { path: "/practice", element: <SelectQuestionPage />, isPublic: false },
   { path: "/setting", element: <SettingPage />, isPublic: false },
   {

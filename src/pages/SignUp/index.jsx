@@ -55,7 +55,7 @@ export default function SignUpPage() {
           password: formData.password,
         };
         await loginMutation.mutateAsync(loginData);
-        navigate("/home");
+        navigate("/videos");
       } catch (error) {
         console.error("Sign up failed:", error);
         setErrors((prevErrors) => ({
