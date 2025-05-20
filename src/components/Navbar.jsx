@@ -55,7 +55,7 @@ export default function Navbar() {
     <nav className="fixed left-0 top-0 h-full w-56 bg-white">
       <div className="flex flex-col px-3 py-5">
         <div className="mb-4 pl-4">
-          <Link to="/" className="inline-block font-bold text-2xl">
+          <Link to="/videos" className="inline-block font-bold text-2xl">
             DIVE
           </Link>
         </div>
@@ -80,13 +80,6 @@ export default function Navbar() {
           onClick={() => handleMenuClick(1, "/questionSets")}
           onItemClick={handleQuestionSetItemClick}
         />
-        <Link
-          to="/resumes"
-          className="block rounded-xl py-2 pl-4 font-medium text-lg hover:bg-gray-100"
-          onClick={() => handleLinkClick("/resumes")}
-        >
-          합격자 이력서
-        </Link>
       </div>
     </nav>
   );
