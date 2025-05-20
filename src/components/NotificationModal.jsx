@@ -13,13 +13,12 @@ export default function NotificationModal({ onClick }) {
     markAsRead(notification.id);
 
     if (
-      notification.type === "comment" &&
+      (notification.type === "comment" ||
+        notification.type === "video_upload") &&
       notification.data &&
-      notification.data.videoPath
+      notification.data.videoId
     ) {
-      window.location.href = `${notification.data.videoPath}?comment=${notification.data.commentId}`;
-    } else if (notification.type === "video_upload" && notification.data) {
-      window.location.href = `/video/${notification.data.videoId}?feedback=${notification.data.feedbackId}`;
+      window.location.href = `/videos/${notification.data.videoId}`;
     }
   };
 
