@@ -1,25 +1,35 @@
-import { useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useUser } from "@hooks/useUser";
 
 export default function LoginCallback() {
-  const { provider } = useParams();
-  const location = useLocation();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { handleCallback } = useUser();
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    const handleOAuthCallback = async () => {
-      const searchParams = new URLSearchParams(location.search);
-      const code = searchParams.get("code");
-      const state = searchParams.get("state");
+    const code = searchParams.get("code");
+    const state = searchParams.get("state");
 
-      if (code) {
-        await handleCallback(provider, code, state);
-      }
-    };
+    if (!code) {
+      navigate("/login");
+      return;
+    }
 
-    handleOAuthCallback();
-  }, [location.search, provider, handleCallback]);
+    if (isProcessing) return;
+
+    setIsProcessing(true);
+
+    const provider = window.location.pathname.split("/")[2];
+
+    handleCallback(provider, code, state)
+      .catch((error) => {
+        console.error("Social login callback failed:", error);
+        navigate("/login");
+      })
+      .finally(() => setIsProcessing(false));
+  }, [navigate, handleCallback, searchParams, isProcessing]);
 
   return (
     <div className="flex h-screen items-center justify-center">

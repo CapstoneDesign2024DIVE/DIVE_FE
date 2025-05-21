@@ -23,6 +23,7 @@ export function useUser() {
       const userInfoResponse = await userApi.getUserInfo();
       setUserInfo(userInfoResponse);
 
+      navigate("/videos");
       return userInfoResponse;
     },
     onError: (error) => {
